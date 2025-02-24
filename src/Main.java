@@ -9,6 +9,6 @@ public class Main {
 
         System.out.println("This is a test commit for the project");
         System.out.println("Test number 2");
-
+        System.out.println("blaha");
         }
     }
