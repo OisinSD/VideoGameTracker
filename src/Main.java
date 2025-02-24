@@ -8,6 +8,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("This is a test commit for the project");
+        System.out.println("Test number 2");
 
         }
     }
