@@ -1,7 +1,3 @@
-// link to past website by Jonathan with signup, sign in and sign out functionality.
-// This is my own code.
-// https://github.com/Supersheep50/The-Hey-Look-Listen-Website
-// Author Jonathan
 
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
