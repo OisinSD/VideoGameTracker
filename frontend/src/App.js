@@ -1,24 +1,58 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
+import SignUpForm from "./authentication/SignUpForm";
+import SignInForm from "./authentication/SignInForm";
 
 function App() {
+  const isInitiallyLoggedIn = () => window.localStorage.getItem("loggedIn") === "true";
+  const [loggedIn, setLoggedIn] = useState(isInitiallyLoggedIn());
+
+  const handleLogin = () => {
+    setLoggedIn(true);
+    window.localStorage.setItem("loggedIn", "true");
+  };
+
+  useEffect(() => {
+    const handleLogout = () => {
+      setLoggedIn(false);
+      localStorage.removeItem("loggedIn");
+    };
+
+    window.addEventListener('beforeunload', handleLogout);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleLogout);
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Router> {/* ✅ Added BrowserRouter Here */}
+        <div className="App">
+          {loggedIn ? (
+              <>
+                <h1>You are logged in!</h1>
+                <button onClick={() => {
+                  setLoggedIn(false);
+                  localStorage.removeItem("loggedIn");
+                }}>
+                  Logout
+                </button>
+              </>
+          ) : (
+              <>
+                <Routes>
+                  <Route path="/signup" element={<SignUpForm />} />
+                  <Route path="/signin" element={<SignInForm onLogin={handleLogin} />} />
+                  <Route path="*" element={<Navigate to="/signin" />} />
+                </Routes>
+                <Link to="/signup">
+                  <button>Go to Sign Up</button>
+                </Link>
+              </>
+          )}
+        </div>
+      </Router>
   );
 }
 
