@@ -27,7 +27,7 @@ function App() {
   }, []);
 
   return (
-      <Router> {/* ✅ Added BrowserRouter Here */}
+      <Router> 
         <div className="App">
           {loggedIn ? (
               <>
@@ -47,7 +47,7 @@ function App() {
                   <Route path="*" element={<Navigate to="/signin" />} />
                 </Routes>
                 <Link to="/signup">
-                  <button>Go to Sign Up</button>
+
                 </Link>
               </>
           )}
