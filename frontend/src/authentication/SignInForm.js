@@ -81,6 +81,8 @@ const SignInForm = ({ onLogin }) => {
 
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <Form.Check type="checkbox" label="Remember Me" className="text-secondary small" />
+
+                        // Forgot password not fully setup yet in app
                         <Link to="/forgot-password" className="text-decoration-none text-light small">Forgot Password?</Link>
                     </div>
 
