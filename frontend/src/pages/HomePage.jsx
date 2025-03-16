@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import "./HomePage.css";
 import SearchBar from "./components/SearchBar";
 import GameList from "./components/GameList";
+import "./components/NewSearch.css";
+import { NewSearchBar } from "./components/NewSearchbar";
+import { SearchResults } from "./components/SearchResults";
+
 
 const gamesData = [
   { title: "Overwatch", category: "Hero Shooter", rating: 4.5, trophies: 15 },
@@ -12,6 +16,8 @@ const gamesData = [
 
 const HomePage = () => {
   const [filteredGames, setFilteredGames] = useState(gamesData);
+
+  const [results, setResults] = useState([]);
 
   const handleSearch = (query) => {
     console.log("Search Query:", query);
@@ -26,7 +32,11 @@ const HomePage = () => {
     <div className="home-page">
       <header className="header">
         <h1>Home Page</h1>
-        <SearchBar onSearch={handleSearch} games={gamesData} /> {}
+        {/* <SearchBar onSearch={handleSearch} games={gamesData} /> {} */}
+         <div className="search-bar-container">
+                <NewSearchBar setResults={setResults} />
+                <SearchResults results={results} /> 
+            </div>
       </header>
       <GameList games={filteredGames} />
     </div>
