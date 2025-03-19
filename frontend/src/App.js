@@ -13,6 +13,7 @@ import SignInForm from "./authentication/SignInForm";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./authentication/firebaseConfig";
 import HomePage from "./pages/HomePage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -69,6 +70,7 @@ function App() {
           <>
             <nav>
               <Link to="/">Home</Link>
+              <Link to="/profile">Profile</Link>
               <button
                 onClick={() => {
                   signOut(auth);
@@ -79,6 +81,7 @@ function App() {
             </nav>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </>

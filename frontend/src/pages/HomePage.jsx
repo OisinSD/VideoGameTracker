@@ -5,6 +5,7 @@ import GameList from "./components/GameList";
 import "./components/NewSearch.css";
 import { NewSearchBar } from "./components/NewSearchbar";
 import { SearchResults } from "./components/SearchResults";
+import { Link } from 'react-router-dom';
 
 
 const gamesData = [
@@ -32,6 +33,7 @@ const HomePage = () => {
     <div className="home-page">
       <header className="header">
         <h1>Home Page</h1>
+        <Link to="/profile" className="btn btn-primary"> Go to Profile</Link>
         {/* <SearchBar onSearch={handleSearch} games={gamesData} /> {} */}
          <div className="search-bar-container">
                 <NewSearchBar setResults={setResults} />
