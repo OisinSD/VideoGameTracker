@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Form, Alert, Button, Container, Card, Image } from "react-bootstrap";
-import BalatroLogo from "../images/video-game-characters.jpg";
+import BalatroLogo from "../assets/images/video-game-characters.jpg";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebaseConfig.js"; // Import firebase config
