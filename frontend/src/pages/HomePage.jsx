@@ -7,6 +7,8 @@ import GameList from "../components/GameList";
 import AddGame from "../components/AddGame";
 import { NewSearchBar } from "../components/NewSearchbar";
 import "../assets/styles/HomePage.css";
+import { signOut } from "firebase/auth";
+import { auth } from "../authentication/firebaseConfig";
 
 const gamesData = [
   { title: "Overwatch", category: "Hero Shooter", rating: 4.5, trophies: 15 },
@@ -23,7 +25,7 @@ const HomePage = () => {
   const handleSearch = (query) => {
     console.log("Search Query:", query);
     const filtered = gamesData.filter((game) =>
-      game.title.toLowerCase().includes(query.toLowerCase())
+        game.title.toLowerCase().includes(query.toLowerCase())
     );
     console.log("Filtered Results:", filtered);
     setFilteredGames(filtered);
@@ -34,43 +36,75 @@ const HomePage = () => {
   }
 
   return (
-    <div className="home-page">
-      <header className="header">
-        <h1>Home Page</h1>
-        <Link to="/profile" className="btn btn-primary">
-          {" "}
-          Go to Profile
-        </Link>
+      <div className="home-page">
+        <header className="position-relative">
+          {/* Banner image */}
+          <div className="banner-wrapper">
+            <img
+                src="/VideoGameCharacters-JuegoStudioBackground.png"
+                alt="Banner"
+                className="banner-image"
+            />
 
-        {/* Search Bar + Add Game Button */}
-        <div className="search-bar-container d-flex align-items-center">
-          <NewSearchBar setResults={setResults} />
-          <SearchResults results={results} />
+            {/* Profile button */}
+            <div className="position-absolute top-0 start-0 m-3">
+              <Link to="/profile">
+                <Button
+                    className="btn btn-lg"
+                    style={{
+                      background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                      border: "none",
+                    }}
+                >
+                  Profile
+                </Button>
+              </Link>
+            </div>
 
-          {/* Add Game Button */}
-          <Button
-            variant="primary"
-            onClick={() => setShowModal(true)}
-            className="btn btn-lg ms-3"
-            style={{
-              background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-              border: "none",
-            }}
-          >
-            <Plus size={20} /> Add Game
-          </Button>
-        </div>
-      </header>
+            {/* Top-right corner: Add Game + Logout */}
+            <div className="position-absolute top-0 end-0 m-3 d-flex gap-2">
+              <Button
+                  variant="primary"
+                  onClick={() => setShowModal(true)}
+                  className="btn btn-lg"
+                  style={{
+                    background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                    border: "none",
+                    whiteSpace: "nowrap",
+                  }}
+              >
+                <Plus size={20} /> Add Game
+              </Button>
 
-      <GameList games={filteredGames} />
+              <Button
+                  className="btn btn-lg"
+                  style={{
+                    background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                    border: "none",
+                  }}
+                  onClick={() => signOut(auth)}
+              >
+                Logout
+              </Button>
+            </div>
+          </div>
 
-      {/* AddGame Modal */}
-      <AddGame
-        show={showModal}
-        handleClose={() => setShowModal(false)}
-        handleAddData={handleAddData}
-      />
-    </div>
+          {/* Search bar only */}
+          <div className="search-bar-container d-flex align-items-center justify-content-center mt-4">
+            <NewSearchBar setResults={setResults} />
+            <SearchResults results={results} />
+          </div>
+        </header>
+
+        <GameList games={filteredGames} />
+
+        {/* AddGame Modal */}
+        <AddGame
+            show={showModal}
+            handleClose={() => setShowModal(false)}
+            handleAddData={handleAddData}
+        />
+      </div>
   );
 };
 

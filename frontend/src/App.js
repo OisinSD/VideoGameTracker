@@ -67,40 +67,33 @@ function App() {
             </button>
           </> */}
         {loggedIn ? (
+            <>
+
+
+
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </Routes>
+            </>
+          ) : (
           <>
-            <nav>
-              <Link to="/">Home</Link>
-              <Link to="/profile">Profile</Link>
-              <button
-                onClick={() => {
-                  signOut(auth);
-                }}
-              >
-                Logout
-              </button>
-            </nav>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </>
-        ) : (
-          <>
-            <Routes>
-              <Route path="/signup" element={<SignUpForm />} />
-              <Route path="/signin" element={<SignInForm />} />
-              <Route path="*" element={<Navigate to="/signin" />} />
-            </Routes>
-            <nav>
-              <Link to="/signup">Sign Up</Link>
-              <Link to="/signin">Sign In</Link>
-            </nav>
-          </>
-        )}
-      </div>
-    </Router>
-  );
+          <Routes>
+          <Route path="/signup" element={<SignUpForm/>}/>
+      <Route path="/signin" element={<SignInForm/>}/>
+      <Route path="*" element={<Navigate to="/signin"/>}/>
+    </Routes>
+  <nav>
+    <Link to="/signup">Sign Up</Link>
+    <Link to="/signin">Sign In</Link>
+  </nav>
+</>
+)}
+</div>
+</Router>
+)
+  ;
 }
 
 export default App;
