@@ -15,6 +15,9 @@ const gamesData = [
   { title: "Call of Duty", category: "FPS", rating: 4.9, trophies: 13 },
   { title: "BattleField 1", category: "WW1 FPS", rating: 5.0, trophies: 11 },
   { title: "Fortnite", category: "Battle Royale", rating: 4.8, trophies: 9 },
+  { title: "The Witcher 3", category: "RPG", rating: 4.8, trophies: 9 },
+  { title: "FIFA 25", category: "Sports", rating: 4.8, trophies: 9 },
+
 ];
 
 const HomePage = () => {
