@@ -1,100 +1,98 @@
-
 /* New SearchBar & SearchResults CSS */
 
-.search-bar-container{
-    /* padding-top: 20vh;  */
-    width: 40%;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 100px;
-  }
-  
-  .input-wrapper{
-    background-color: #414158;
-    width: 50%;
-    border-radius: 10px;
-    height: 2.5rem;
-    padding: 0 15px;
-    /* box-shadow: 0px 0px 8px #ddd; */
-    display: flex;
-    align-items: center;
-  }
-  .my-input{
-    background-color: transparent;
-    border: none;
-    height: 100%;
-    font-size: 1.25rem;
-    width: 100%;
-    margin-left: 5px;
-    color:white;
-  }
-  .my-input::placeholder{
-    color: white;
-  }
-  
-  input:focus{
-    outline: none;
-  }
-  
-  #search-icon {
-    color: white;
-  }
-  #search-icon2{
-    color: white;
-    
-  }
-  
-  .results-list{
-    cursor: pointer;
-    position: absolute; 
-    top: 150px; 
-    width: 290px;
-    max-height: 200px; 
-    overflow-y: auto;
-    background: rgba(255, 255, 255, 0.85); 
-    border-radius: 10px;
-    /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); Soft shadow */
-    padding: 10px;
-    z-index: 1000;
-  }
+.search-bar-container {
+  /* padding-top: 20vh;  */
+  width: 40%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+}
 
-  .NOresults-list{
-     width: 0%;
-    background-color:transparent;
-    display: flex;
-    flex-direction: column;
-    /* box-shadow: 0px 0px 8px #ddd; */
-    border-radius: 10px;
-    margin-top: 1rem;
-    max-height: 300px;
-    /* padding: 10px; */
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px 
-  }
-  
-  .results-game-card {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-  }
-  
-  .game-image {
-    width: 50px; /* Adjust size as needed */
-    height: 50px;
-    border-radius: 5px;
-    display: block;
-    margin-top: 5px;
-    max-width: 100px;
-    max-height: 100px;
-  }
-  
-  .game-name-info{
-    padding-left: 10px;
-    color: black;
-    font-size:medium
-  }
-  
-  /* End of SearchBar and SearchResults CSS */ 
+.input-wrapper {
+  background-color: #414158;
+  width: 50%;
+  border-radius: 10px;
+  height: 2.5rem;
+  padding: 0 15px;
+  /* box-shadow: 0px 0px 8px #ddd; */
+  display: flex;
+  align-items: center;
+}
+.my-input {
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  font-size: 1.25rem;
+  width: 100%;
+  margin-left: 5px;
+  color: white;
+}
+.my-input::placeholder {
+  color: white;
+}
+
+input:focus {
+  outline: none;
+}
+
+#search-icon {
+  color: white;
+}
+#search-icon2 {
+  color: white;
+}
+
+.results-list {
+  cursor: pointer;
+  position: absolute;
+  top: 150px;
+  width: 290px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); Soft shadow */
+  padding: 10px;
+  z-index: 1000;
+}
+
+.NOresults-list {
+  width: 0%;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  /* box-shadow: 0px 0px 8px #ddd; */
+  border-radius: 10px;
+  margin-top: 1rem;
+  max-height: 300px;
+  /* padding: 10px; */
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+}
+
+.results-game-card {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+}
+
+.game-image {
+  width: 50px; /* Adjust size as needed */
+  height: 50px;
+  border-radius: 5px;
+  display: block;
+  margin-top: 5px;
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.game-name-info {
+  padding-left: 10px;
+  color: black;
+  font-size: medium;
+}
+
+/* End of SearchBar and SearchResults CSS */
