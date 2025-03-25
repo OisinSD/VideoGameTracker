@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Form, Alert, Button, Container, Card } from "react-bootstrap";
 import BalatroLogo from "../assets/images/video-game-characters.jpg";
 
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "./firebaseConfig.js"; // Import firebase config
 
 const SignUpForm = () => {
@@ -58,6 +58,12 @@ const SignUpForm = () => {
       }
 
       await createUserWithEmailAndPassword(auth, email, password1);
+
+      // Update the user's displayName with the username from the profil page
+      await updateProfile(auth.currentUser, {
+        displayName: username,
+      });
+
       navigate("/signin");
       //NOTE:Remove localStorage on user's information
       // const users = JSON.parse(localStorage.getItem("users")) || [];
