@@ -49,7 +49,7 @@
   .results-list{
     cursor: pointer;
     position: absolute; 
-    top: 150px; 
+    top: 320px; 
     width: 290px;
     max-height: 200px; 
     overflow-y: auto;
