@@ -14,6 +14,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./authentication/firebaseConfig";
 import HomePage from "./pages/HomePage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import Footer from "./components/Footer";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -67,33 +68,30 @@ function App() {
             </button>
           </> */}
         {loggedIn ? (
-            <>
-
-
-
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="*" element={<Navigate to="/" />} />
-              </Routes>
-            </>
-          ) : (
           <>
-          <Routes>
-          <Route path="/signup" element={<SignUpForm/>}/>
-      <Route path="/signin" element={<SignInForm/>}/>
-      <Route path="*" element={<Navigate to="/signin"/>}/>
-    </Routes>
-  <nav>
-    <Link to="/signup">Sign Up</Link>
-    <Link to="/signin">Sign In</Link>
-  </nav>
-</>
-)}
-</div>
-</Router>
-)
-  ;
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </>
+        ) : (
+          <>
+            <Routes>
+              <Route path="/signup" element={<SignUpForm />} />
+              <Route path="/signin" element={<SignInForm />} />
+              <Route path="*" element={<Navigate to="/signin" />} />
+            </Routes>
+            {/* <nav>
+              <Link to="/signup">Sign Up</Link>
+              <Link to="/signin">Sign In</Link>
+            </nav> */}
+          </>
+        )}
+        <Footer />
+      </div>
+    </Router>
+  );
 }
 
 export default App;
