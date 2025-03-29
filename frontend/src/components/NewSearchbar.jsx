@@ -34,6 +34,7 @@ export const NewSearchBar = ({ setResults }) => {
         className="my-input"
         id="GameInput"
         placeholder="Search Game..."
+        autoComplete="off"
         value={input}
         onChange={(e) => handleChange(e.target.value)}
       />
