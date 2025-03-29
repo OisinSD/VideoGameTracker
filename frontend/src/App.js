@@ -13,7 +13,7 @@ import SignInForm from "./authentication/SignInForm";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./authentication/firebaseConfig";
 import HomePage from "./pages/HomePage.jsx";
-import ProfilePage from "./pages/ProfilePage.jsx";
+import ProfilePage from "./components/ProfilePage.jsx";
 import Footer from "./components/Footer";
 
 function App() {
