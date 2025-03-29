@@ -5,6 +5,7 @@ import { Plus } from "react-bootstrap-icons";
 import { SearchResults } from "../components/SearchResults";
 //NOTE: import GameList from "../components/GameList";
 import AddGame from "../components/AddGame";
+import GameInfo from "../components/GameInfo";
 import { NewSearchBar } from "../components/NewSearchbar";
 import "../assets/styles/HomePage.css";
 import { signOut } from "firebase/auth";
@@ -23,7 +24,9 @@ const gamesData = [
 const HomePage = () => {
   const [filteredGames, setFilteredGames] = useState(gamesData);
   const [results, setResults] = useState([]);
-  const [showModal, setShowModal] = useState(false); // Modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  // Modal state
 
   const handleSearch = (query) => {
     console.log("Search Query:", query);
@@ -67,16 +70,15 @@ const HomePage = () => {
           {/* Top-right corner: Add Game + Logout */}
           <div className="position-absolute top-0 end-0 m-3 d-flex gap-2">
             <Button
-              variant="primary"
-              onClick={() => setShowModal(true)}
-              className="btn btn-lg"
-              style={{
-                background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                border: "none",
-                whiteSpace: "nowrap",
-              }}
+                variant="primary"
+                onClick={() => setShowInfoModal(true)}
+                className="btn btn-lg w-30"
+                style={{
+                  background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                  border: "none",
+                }}
             >
-              <Plus size={20} /> Add Game
+              <Plus size={20} /> Game Info
             </Button>
 
             <Button
@@ -104,9 +106,19 @@ const HomePage = () => {
 
       {/* AddGame Modal */}
       <AddGame
-        show={showModal}
-        handleClose={() => setShowModal(false)}
-        handleAddData={handleAddData}
+          show={showAddModal}
+          handleClose={() => setShowAddModal(false)}
+          handleAddData={handleAddData}
+      />
+
+      <GameInfo
+          show={showInfoModal}
+          handleClose={() => setShowInfoModal(false)}
+          handleAddData={handleAddData}
+          triggerAddGame={() => {
+            setShowInfoModal(false);
+            setShowAddModal(true);
+          }}
       />
     </div>
   );
