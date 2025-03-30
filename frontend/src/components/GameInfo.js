@@ -3,20 +3,32 @@ import { Form, Modal, Button } from "react-bootstrap";
 import { StarFill, Star } from "react-bootstrap-icons";
 import witcherThumbnail from "../assets/images/witcher-thumbnail.webp";
 
-export default function GameInfo({
-                                     show,
-                                     handleClose,
-                                     handleAddData,
-                                     triggerAddGame,
-                                 }) {
+
+export default function GameInfo({show,handleClose,handleAddData,triggerAddGame,game}) {
     const [review, setReview] = useState("");
     const [hoursPlayed, setHoursPlayed] = useState("");
     const [rating, setRating] = useState(0);
     const [addedToPlaying, setAddedToPlaying] = useState(false);
+    const [showFullDescription, setShowFullDescription] = useState(false);
+
+    console.log("Game data in Modal:", game);
+
+    if (!game  ) return null;
 
     function handleSubmit(e) {
         e.preventDefault();
     }
+
+    
+    const removeHTML = htmlString => {
+        let tmp = document.createElement('div');
+        tmp.innerHTML = htmlString;
+        return tmp.textContent || tmp.innerText || '';
+    }
+
+    const cleanedDescription = game.description ? removeHTML(game.description) : "No description available.";
+    const shortDescription = cleanedDescription.length > 500 ? cleanedDescription.slice(0, 500) + "... " : cleanedDescription;
+
     return (
         <Modal show={show} onHide={handleClose} centered>
             <style>
@@ -33,20 +45,21 @@ export default function GameInfo({
                     <div className="d-flex align-items-center gap-3">
                         {/* Game Thumbnail */}
                         <img
-                            src={witcherThumbnail}
+                            src={game.background_image}
                             alt="Game Thumbnail"
                             className="img-fluid rounded"
                             style={{ width: "100px", height: "150px", objectFit: "cover" }}
                         />
                         {/* Title */}
                         <div className="d-flex flex-column text-center">
-                            <h2 className="fw-bold m-0">The Witcher 3</h2>
-                            <h6 className="text-secondary">Publisher: CD Projekt Red</h6>
-                            <h6 className="text-secondary">Genre: RPG</h6>
+                            <h2 className="fw-bold m-0">{game.name}</h2>
+                            <h6 className="text-secondary">Publisher:  {game.publishers ? game.publishers.map(p => p.name).join(", ") : "Unknown"}</h6>
+                        
+                            <h6 className="text-secondary">Genre: {game.genres ? game.genres.map(g => g.name).join(", ") : "Unkown"} </h6>
                             <h6 className="text-secondary">
-                                Platform: Playstation, Xbox, PC, Nintendo
+                                Platform: {game.parent_platforms ? game.parent_platforms.map(pp => pp.platform.name).join(", ") : "Unknown"}
                             </h6>
-                            <h6 className="text-secondary">Release Date: 2005</h6>
+                            <h6 className="text-secondary">Release Date: {game.released}</h6>
                         </div>
                     </div>
                 </Modal.Header>
@@ -56,11 +69,17 @@ export default function GameInfo({
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="review">Game Summary</Form.Label>
                         <p>
-                            In The Witcher 3 an ancient evil stirs, awakening. An evil that
-                            sows terror and abducts the young. An evil whose name is spoken
-                            only in whispers: the Wild Hunt. Led by four wraith commanders,
-                            this ravenous band of phantoms is the ultimate predator and has
-                            been for centuries. Its quarry: humans.
+                        {showFullDescription ? cleanedDescription : shortDescription}
+                        {cleanedDescription.length > 500 && (
+                            <Button
+                                variant="link"
+                                className="p-0 text-secondary"
+                                
+                                onClick={() => setShowFullDescription(!showFullDescription)}
+                            >
+                                {showFullDescription ? "Show Less" : "Read More"}
+                            </Button>
+                        )}
                         </p>
                     </Form.Group>
 
@@ -69,7 +88,7 @@ export default function GameInfo({
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                        <h6>Metacritic Score 📈: 89</h6>
+                        <h6>Metacritic Score 📈: {game.metacritic ? game.metacritic : "N/A"} </h6>
                     </Form.Group>
 
                     {/* Add Button */}

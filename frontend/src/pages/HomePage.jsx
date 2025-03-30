@@ -46,12 +46,14 @@ const HomePage = () => {
       <header className="position-relative">
         {/* Banner image */}
         <div className="banner-wrapper">
-          <img
+          {/* <img
             src="/VideoGameCharacters-JuegoStudioBackground.png"
             alt="Banner"
             className="banner-image"
-          />
+            style={{height:"30vh"}}
+          /> */}
 
+            <div className="banner">
           {/* Profile button */}
           <div className="position-absolute top-0 start-0 m-3">
             <Link to="/profile">
@@ -95,9 +97,10 @@ const HomePage = () => {
         </div>
 
         {/* Search bar only */}
-        <div className="search-bar-container d-flex align-items-center justify-content-center mt-4">
+        <div className="search-bar-container">
           <NewSearchBar setResults={setResults} />
           <SearchResults results={results} />
+        </div>
         </div>
       </header>
 
