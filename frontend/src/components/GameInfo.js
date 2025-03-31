@@ -84,7 +84,7 @@ export default function GameInfo({show,handleClose,handleAddData,triggerAddGame,
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                        <h6>Number of Trophies 🏆: 79</h6>
+                        <h6>Number of Trophies 🏆: {game.parent_achievements_count}</h6>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
