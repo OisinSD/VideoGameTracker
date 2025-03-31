@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Form, Alert, Button, Container, Card, Image } from "react-bootstrap";
-import BalatroLogo from "../assets/images/video-game-characters.jpg";
+import BalatroLogo from "../assets/images/Video_game_char.jpg";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebaseConfig.js"; // Import firebase config
@@ -51,8 +51,8 @@ const SignInForm = ({ onLogin }) => {
       fluid
       className="d-flex justify-content-center align-items-center min-vh-100"
       style={{
-        backgroundImage: `url(${BalatroLogo})`,
-        backgroundSize: "cover",
+        backgroundImage: ` url(${BalatroLogo})`,
+        backgroundSize: "contain, cover",
         backgroundPosition: "center",
       }}
     >
