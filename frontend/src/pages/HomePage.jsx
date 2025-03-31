@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
 import { SearchResults } from "../components/SearchResults";
-//NOTE: import GameList from "../components/GameList";
 import AddGame from "../components/AddGame";
 import GameInfo from "../components/GameInfo";
+import ProfilePage from "../components/ProfilePage"; 
 import { NewSearchBar } from "../components/NewSearchbar";
 import "../assets/styles/HomePage.css";
 import { signOut } from "firebase/auth";
@@ -26,14 +26,12 @@ const HomePage = () => {
   const [results, setResults] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
-  // Modal state
+  const [showProfileModal, setShowProfileModal] = useState(false); // New state for profile modal
 
   const handleSearch = (query) => {
-    console.log("Search Query:", query);
     const filtered = gamesData.filter((game) =>
       game.title.toLowerCase().includes(query.toLowerCase())
     );
-    console.log("Filtered Results:", filtered);
     setFilteredGames(filtered);
   };
 
@@ -44,7 +42,6 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <header className="position-relative">
-        {/* Banner image */}
         <div className="banner-wrapper">
           {/* <img
             src="/VideoGameCharacters-JuegoStudioBackground.png"
@@ -56,29 +53,28 @@ const HomePage = () => {
             <div className="banner">
           {/* Profile button */}
           <div className="position-absolute top-0 start-0 m-3">
-            <Link to="/profile">
-              <Button
-                className="btn btn-lg"
-                style={{
-                  background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                  border: "none",
-                }}
-              >
-                Profile
-              </Button>
-            </Link>
+            <Button
+              onClick={() => setShowProfileModal(true)}
+              className="btn btn-lg"
+              style={{
+                background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                border: "none",
+              }}
+            >
+              Profile
+            </Button>
           </div>
 
           {/* Top-right corner: Add Game + Logout */}
           <div className="position-absolute top-0 end-0 m-3 d-flex gap-2">
             <Button
-                variant="primary"
-                onClick={() => setShowInfoModal(true)}
-                className="btn btn-lg w-30"
-                style={{
-                  background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                  border: "none",
-                }}
+              variant="primary"
+              onClick={() => setShowInfoModal(true)}
+              className="btn btn-lg w-30"
+              style={{
+                background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                border: "none",
+              }}
             >
               <Plus size={20} /> Game Info
             </Button>
@@ -105,24 +101,11 @@ const HomePage = () => {
       </header>
 
       <GameCardDisplay />
-      {/* <GameList games={filteredGames} /> */}
 
-      {/* AddGame Modal */}
-      <AddGame
-          show={showAddModal}
-          handleClose={() => setShowAddModal(false)}
-          handleAddData={handleAddData}
-      />
-
-      <GameInfo
-          show={showInfoModal}
-          handleClose={() => setShowInfoModal(false)}
-          handleAddData={handleAddData}
-          triggerAddGame={() => {
-            setShowInfoModal(false);
-            setShowAddModal(true);
-          }}
-      />
+      {/* Modals */}
+      <ProfilePage show={showProfileModal} handleClose={() => setShowProfileModal(false)} />
+      <AddGame show={showAddModal} handleClose={() => setShowAddModal(false)} handleAddData={handleAddData} />
+      <GameInfo show={showInfoModal} handleClose={() => setShowInfoModal(false)} handleAddData={handleAddData} triggerAddGame={() => { setShowInfoModal(false); setShowAddModal(true); }} />
     </div>
   );
 };
