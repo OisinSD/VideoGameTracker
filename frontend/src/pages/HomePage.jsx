@@ -43,13 +43,15 @@ const HomePage = () => {
     <div className="home-page">
       <header className="position-relative">
         <div className="banner-wrapper">
-          <img
+          {/* <img
             src="/VideoGameCharacters-JuegoStudioBackground.png"
             alt="Banner"
             className="banner-image"
-          />
+            style={{height:"30vh"}}
+          /> */}
 
-          {/* Profile Modal  */}
+            <div className="banner">
+          {/* Profile button */}
           <div className="position-absolute top-0 start-0 m-3">
             <Button
               onClick={() => setShowProfileModal(true)}
@@ -90,10 +92,11 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="search-bar-container d-flex align-items-center justify-content-center mt-4">
+        {/* Search bar only */}
+        <div className="search-bar-container">
           <NewSearchBar setResults={setResults} />
           <SearchResults results={results} />
+        </div>
         </div>
       </header>
 
