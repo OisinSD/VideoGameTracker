@@ -3,10 +3,13 @@ import { Form, Modal, Button } from "react-bootstrap";
 import { StarFill, Star } from "react-bootstrap-icons";
 import witcherThumbnail from "../assets/images/witcher-thumbnail.webp";
 
+
 export default function AddGame({ show, handleClose, handleAddData }) {
   const [review, setReview] = useState("");
   const [hoursPlayed, setHoursPlayed] = useState("");
   const [rating, setRating] = useState(0);
+  const [trophiesUnlocked, setTrophiesUnlocked] = useState("");
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -80,7 +83,24 @@ export default function AddGame({ show, handleClose, handleAddData }) {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="hoursPlayed">Hours Played</Form.Label>
+              <Form.Label htmlFor="trophiesUnlocked">Trophies Unlocked 🏆</Form.Label>
+              <Form.Control
+                  type="number"
+                  id="trophiesUnlocked"
+                  className="form-control bg-dark text-light border-secondary rounded-3"
+                  value={trophiesUnlocked}
+                  onChange={(e) => setTrophiesUnlocked(e.target.value)}
+                  placeholder="Enter trophies unlocked"
+                  min={0}
+                  step={1}
+                  required
+              />
+            </Form.Group>
+
+
+
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="hoursPlayed">Hours Played ⏳</Form.Label>
               <Form.Control
                   type="number"
                   id="hoursPlayed"

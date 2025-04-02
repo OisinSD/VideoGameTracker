@@ -30,43 +30,11 @@ function App() {
   if (loading) {
     return <h2>Loading...</h2>;
   }
-  // const isInitiallyLoggedIn = () =>
-  //   window.localStorage.getItem("loggedIn") === "true";
-  // const [loggedIn, setLoggedIn] = useState(isInitiallyLoggedIn());
-
-  // const handleLogin = () => {
-  //   setLoggedIn(true);
-  //   window.localStorage.setItem("loggedIn", "true");
-  // };
-
-  // useEffect(() => {
-  //   const handleLogout = () => {
-  //     setLoggedIn(false);
-  //     localStorage.removeItem("loggedIn");
-  //   };
-
-  //   window.addEventListener("beforeunload", handleLogout);
-
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleLogout);
-  //   };
-  // }, []);
 
   return (
     <Router>
       <div className="App">
-        {/* {loggedIn ? (
-          <>
-            <h1>You are logged in!</h1>
-            <button
-              onClick={() => {
-                setLoggedIn(false);
-                localStorage.removeItem("loggedIn");
-              }}
-            >
-              Logout
-            </button>
-          </> */}
+
         {loggedIn ? (
           <>
             <Routes>
@@ -82,10 +50,7 @@ function App() {
               <Route path="/signin" element={<SignInForm />} />
               <Route path="*" element={<Navigate to="/signin" />} />
             </Routes>
-            {/* <nav>
-              <Link to="/signup">Sign Up</Link>
-              <Link to="/signin">Sign In</Link>
-            </nav> */}
+
           </>
         )}
         <Footer />

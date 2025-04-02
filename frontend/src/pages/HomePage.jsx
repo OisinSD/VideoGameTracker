@@ -67,19 +67,20 @@ const HomePage = () => {
 
           {/* Top-right corner: Add Game + Logout */}
           <div className="position-absolute top-0 end-0 m-3 d-flex gap-2">
-            <Button
-              variant="primary"
-              onClick={() => setShowInfoModal(true)}
-              className="btn btn-lg w-30"
-              style={{
-                background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                border: "none",
-              }}
-            >
-              <Plus size={20} /> Game Info
-            </Button>
+              <Button
+                  variant="primary"
+                  onClick={() => setShowAddModal(true)} // 👈 open AddGame instead
+                  className="btn btn-lg w-30"
+                  style={{
+                      background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                      border: "none",
+                  }}
+              >
+                  <Plus size={20} /> Add Game
+              </Button>
 
-            <Button
+
+              <Button
               className="btn btn-lg"
               style={{
                 background: "linear-gradient(90deg, #7f57f5, #e157f5)",
