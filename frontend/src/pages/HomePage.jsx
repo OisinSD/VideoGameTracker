@@ -13,11 +13,17 @@ import { auth } from "../authentication/firebaseConfig";
 import GameCardDisplay from "../components/GameCardDisplay";
 
 const HomePage = () => {
-  const [selectedGame, setSelectedGame] = useState(null);
+  // const [selectedGame, setSelectedGame] = useState(null);
   const [results, setResults] = useState([]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
+  // const [showAddModal, setShowAddModal] = useState(false);
+  // const [showInfoModal, setShowInfoModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [addGameData, setAddGameData] = useState(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [refreshGames, setRefreshGames] = useState(false);
 
   const triggerGameInfo = (game) => {
     setSelectedGame(game);
@@ -27,6 +33,17 @@ const HomePage = () => {
   function handleAddData(data) {
     console.log("New Data:", data);
   }
+
+  const handleGameSelectFromSearch = (game) => {
+    setSelectedGame(game);
+    setShowInfoModal(true);
+  };
+
+  const triggerAddGame = (extraData) => {
+    setAddGameData(extraData);
+    setShowInfoModal(false);
+    setShowAddModal(true);
+  };
 
   return (
     <div className="home-page">
@@ -86,34 +103,40 @@ const HomePage = () => {
             <NewSearchBar
               setResults={setResults}
               results={results}
-              triggerGameInfo={triggerGameInfo}
+              triggerGameInfo={handleGameSelectFromSearch}
             />
-            <SearchResults results={results} />
+
+            <SearchResults
+              results={results}
+              onSelectGame={handleGameSelectFromSearch}
+            />
           </div>
         </div>
       </header>
 
-      <GameCardDisplay />
+      <GameCardDisplay refreshTrigger={refreshGames} />
 
       {/* Modals */}
       <ProfilePage
         show={showProfileModal}
         handleClose={() => setShowProfileModal(false)}
+        refreshTrigger={refreshGames}
       />
       <AddGame
         show={showAddModal}
         handleClose={() => setShowAddModal(false)}
         handleAddData={handleAddData}
+        game={selectedGame}
+        extraData={addGameData}
+        setRefreshGames={setRefreshGames}
       />
       <GameInfo
         show={showInfoModal}
         handleClose={() => setShowInfoModal(false)}
         handleAddData={handleAddData}
-        triggerAddGame={() => {
-          setShowInfoModal(false);
-          setShowAddModal(true);
-        }}
+        triggerAddGame={triggerAddGame}
         game={selectedGame}
+        setRefreshGames={setRefreshGames}
       />
     </div>
   );

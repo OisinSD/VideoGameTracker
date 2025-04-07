@@ -4,7 +4,8 @@ import { Form, Alert, Button, Container, Card } from "react-bootstrap";
 import BalatroLogo from "../assets/images/video-game-characters.jpg";
 
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "./firebaseConfig.js"; // Import firebase config
+import { auth, db } from "./firebaseConfig.js";
+import { doc, setDoc } from "firebase/firestore";
 
 const SignUpForm = () => {
   const [signUpData, setSignUpData] = useState({
@@ -62,6 +63,12 @@ const SignUpForm = () => {
       // Update the user's displayName with the username from the profil page
       await updateProfile(auth.currentUser, {
         displayName: username,
+      });
+
+      await setDoc(doc(db, "userProfil", auth.currentUser.uid), {
+        gamesPlayed: 0,
+        totalAchievements: 0,
+        achievementCompletion: 0,
       });
 
       navigate("/signin");

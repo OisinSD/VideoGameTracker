@@ -25,7 +25,7 @@ const GameCard = ({ game }) => {
           <i className="material-icons">place</i> Rating: {game.rating}/5
         </p>
         <p className="game-trophies">
-          <strong>{game.trophies} Trophies</strong>
+          <strong>{game.trophiesUnlocked || 0} Trophies</strong>
         </p>
       </div>
     </div>
