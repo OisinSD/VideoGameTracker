@@ -73,6 +73,7 @@ const HomePage = () => {
 
             {/* Top-right corner: Add Game + Logout */}
             <div className="position-absolute top-0 end-0 m-3 d-flex gap-2">
+                {/*}
               <Button
                 variant="primary"
                 onClick={() => setShowAddModal(true)} // 👈 open AddGame instead
@@ -84,6 +85,7 @@ const HomePage = () => {
               >
                 <Plus size={20} /> Add Game
               </Button>
+              */}
 
               <Button
                 className="btn btn-lg"
