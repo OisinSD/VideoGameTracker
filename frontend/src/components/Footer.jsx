@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({ onPrivacyClick, onTermsClick, onAboutClick, onContactClick }) => {
   return (
     <footer
       style={{ backgroundColor: "#121212" }}
@@ -11,18 +11,18 @@ const Footer = () => {
         <p className="mb-2">© 2025 Quest Log. All rights reserved.</p>
 
         <div className="d-flex justify-content-center gap-3 mb-3">
-          <Link to="#" className="text-light text-decoration-none">
+        <button onClick={onPrivacyClick} className="btn btn-link text-light text-decoration-none p-0">
             Privacy
-          </Link>
-          <Link to="#" className="text-light text-decoration-none">
+          </button>
+          <button onClick={onTermsClick} className="btn btn-link text-light text-decoration-none p-0">
             Terms
-          </Link>
-          <Link to="#" className="text-light text-decoration-none">
+          </button>
+          <button onClick={onAboutClick} className="btn btn-link text-light text-decoration-none p-0">
             About
-          </Link>
-          <Link to="#" className="text-light text-decoration-none">
+          </button>
+          <button onClick={onContactClick} className="btn btn-link text-light text-decoration-none p-0">
             Contact
-          </Link>
+          </button>
         </div>
 
         <div className="d-flex justify-content-center gap-4">

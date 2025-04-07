@@ -16,9 +16,29 @@ import HomePage from "./pages/HomePage.jsx";
 import ProfilePage from "./components/ProfilePage.jsx";
 import Footer from "./components/Footer";
 
+import PrivacyModal from "./components/PrivacyModal";
+import TermsModal from "./components/TermsModal";
+import AboutModal from "./components/AboutModal";
+import ContactModal from "./components/ContactModal";
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [modalState, setModalState] = useState({
+    privacy: false,
+    terms: false,
+    about: false,
+    contact: false,
+  });
+
+  const openModal = (key) => {
+    setModalState((prev) => ({ ...prev, [key]: true }));
+  };
+
+  const closeModal = (key) => {
+    setModalState((prev) => ({ ...prev, [key]: false }));
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -53,7 +73,27 @@ function App() {
 
           </>
         )}
-        <Footer />
+        <Footer onPrivacyClick={() => openModal("privacy")}
+          onTermsClick={() => openModal("terms")}
+          onAboutClick={() => openModal("about")}
+          onContactClick={() => openModal("contact")}
+        />
+        <PrivacyModal
+          show={modalState.privacy}
+          handleClose={() => closeModal("privacy")}
+        />
+        <TermsModal
+          show={modalState.terms}
+          handleClose={() => closeModal("terms")}
+        />
+        <AboutModal
+          show={modalState.about}
+          handleClose={() => closeModal("about")}
+        />
+        <ContactModal
+          show={modalState.contact}
+          handleClose={() => closeModal("contact")}
+        />
       </div>
     </Router>
   );
