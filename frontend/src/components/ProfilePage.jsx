@@ -1,27 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { auth } from "../authentication/firebaseConfig";
+import { auth, db } from "../authentication/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import gamerAvatar from "../assets/images/gamer-avatar.jpg";
+import { doc, getDoc } from "firebase/firestore";
 
-const ProfilePage = ({ show, handleClose }) => {
+const ProfilePage = ({ show, handleClose, refreshTrigger }) => {
   const [user, setUser] = useState(null);
   const [gamesPlayed, setGamesPlayed] = useState(0);
   const [totalAchievements, setTotalAchievements] = useState(0);
   const [achievementCompletion, setAchievementCompletion] = useState(0);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-        setGamesPlayed(4);
-        setTotalAchievements(48);
-        setAchievementCompletion(80);
+
+        const docRef = doc(db, "userProfil", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setGamesPlayed(data.gamesPlayed || 0);
+          setTotalAchievements(data.totalAchievements || 0);
+          setAchievementCompletion(data.achievementCompletion || 0);
+        } else {
+          console.log("No profile data found.");
+        }
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [refreshTrigger]);
 
   if (!user) return null;
 

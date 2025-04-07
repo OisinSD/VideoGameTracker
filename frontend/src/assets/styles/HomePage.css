@@ -10,7 +10,6 @@
   background-size: cover;
   background-position: center;
   padding: 20px;
- 
 }
 
 .search-container {
@@ -42,7 +41,7 @@ input {
 
 .game-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   justify-content: center;
   margin-top: 20px;
