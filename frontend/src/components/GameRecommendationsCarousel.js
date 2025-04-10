@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import GameCard from "./GameCard";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const responsive = {
     desktop: { breakpoint: { max: 3000, min: 1024 }, items: 3 },
@@ -44,9 +45,11 @@ const GameRecommendationsCarousel = () => {
     if (!recommendations.length) return null;
 
     return (
-        <div className="container-fluid px-0">
-            <div className="bg-secondary text-white py-3 w-100 text-center">
-                <h2 className="fw-bold text-uppercase">🎯 Game Recommendations</h2>
+        <>
+            <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom">
+                <h2 className="fw-semibold text-capitalize m-0" style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}>
+                    <i className="bi bi-controller me-2"></i>Game Recommendations
+                </h2>
             </div>
 
             <div className="container py-4">
@@ -61,15 +64,14 @@ const GameRecommendationsCarousel = () => {
                     showDots={false}
                     pauseOnHover={false}
                     containerClass="carousel-container"
-                    itemClass="carousel-item-padding-20-px"  // 👈 add this class!
+                    itemClass="carousel-item-padding-20-px"
                 >
-
-                {recommendations.map((game, index) => (
+                    {recommendations.map((game, index) => (
                         <GameCard key={index} game={game} />
                     ))}
                 </Carousel>
             </div>
-        </div>
+        </>
     );
 };
 
