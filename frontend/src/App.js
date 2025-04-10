@@ -21,6 +21,7 @@ import TermsModal from "./components/TermsModal";
 import AboutModal from "./components/AboutModal";
 import ContactModal from "./components/ContactModal";
 
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -61,6 +62,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="*" element={<Navigate to="/" />} />
+
             </Routes>
           </>
         ) : (
@@ -69,6 +71,8 @@ function App() {
               <Route path="/signup" element={<SignUpForm />} />
               <Route path="/signin" element={<SignInForm />} />
               <Route path="*" element={<Navigate to="/signin" />} />
+
+
             </Routes>
 
           </>
