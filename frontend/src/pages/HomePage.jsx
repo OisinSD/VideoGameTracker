@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+
 import { Button } from "react-bootstrap";
-import { Plus } from "react-bootstrap-icons";
+
 import { SearchResults } from "../components/SearchResults";
 import AddGame from "../components/AddGame";
 import GameInfo from "../components/GameInfo";
@@ -11,6 +11,8 @@ import "../assets/styles/HomePage.css";
 import { signOut } from "firebase/auth";
 import { auth } from "../authentication/firebaseConfig";
 import GameCardDisplay from "../components/GameCardDisplay";
+import GameRecommendationsCarousel from "../components/GameRecommendationsCarousel";
+
 
 const HomePage = () => {
   // const [selectedGame, setSelectedGame] = useState(null);
@@ -72,8 +74,8 @@ const HomePage = () => {
             </div>
 
             {/* Top-right corner: Add Game + Logout */}
-            <div className="position-absolute top-0 end-0 m-3 d-flex gap-2">
-                {/*}
+              <div className="position-absolute top-0 end-0 m-3 d-flex gap-2">
+                  {/*}
               <Button
                 variant="primary"
                 onClick={() => setShowAddModal(true)} // 👈 open AddGame instead
@@ -87,24 +89,25 @@ const HomePage = () => {
               </Button>
               */}
 
-              <Button
-                className="btn btn-lg"
-                style={{
-                  background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                  border: "none",
-                }}
-                onClick={() => signOut(auth)}
-              >
-                Logout
-              </Button>
-            </div>
+
+                  <Button
+                      className="btn btn-lg"
+                      style={{
+                          background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                          border: "none",
+                      }}
+                      onClick={() => signOut(auth)}
+                  >
+                      Logout
+                  </Button>
+              </div>
           </div>
 
-          {/* Search bar only */}
-          <div className="search-bar-container">
-            <NewSearchBar
-              setResults={setResults}
-              results={results}
+            {/* Search bar only */}
+            <div className="search-bar-container">
+                <NewSearchBar
+                    setResults={setResults}
+                    results={results}
               triggerGameInfo={handleGameSelectFromSearch}
             />
 
@@ -116,7 +119,10 @@ const HomePage = () => {
         </div>
       </header>
 
-      <GameCardDisplay refreshTrigger={refreshGames} />
+        <GameRecommendationsCarousel />
+
+
+        <GameCardDisplay refreshTrigger={refreshGames} />
 
       {/* Modals */}
       <ProfilePage
