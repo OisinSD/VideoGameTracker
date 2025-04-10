@@ -61,9 +61,10 @@ const GameRecommendationsCarousel = () => {
                     showDots={false}
                     pauseOnHover={false}
                     containerClass="carousel-container"
-                    itemClass="carousel-item-padding-40-px"
+                    itemClass="carousel-item-padding-20-px"  // 👈 add this class!
                 >
-                    {recommendations.map((game, index) => (
+
+                {recommendations.map((game, index) => (
                         <GameCard key={index} game={game} />
                     ))}
                 </Carousel>

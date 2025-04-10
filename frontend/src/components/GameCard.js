@@ -1,38 +1,35 @@
 import React from "react";
 
-const GameCard = ({ game }) => {
+const GameCard = ({ game, onClick }) => {
     return (
-        <div className="card shadow-sm rounded p-3 text-white" style={{ backgroundColor: "#333", minWidth: "250px", maxWidth: "300px", margin: "0 auto" }}>
-            <div className="d-flex align-items-center mb-3">
+        <div className="game-card mx-3" onClick={onClick} style={{ cursor: "pointer" }}>
+            <div className="game-header">
                 {game.poster ? (
                     <img
                         src={game.poster}
                         alt={`${game.title} Poster`}
-                        className="me-3"
-                        style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "10px" }}
+                        className="game-logo"
+                        style={{ width: "100px", height: "100px", objectFit: "cover" }}
                     />
                 ) : (
-                    <div className="bg-light text-dark d-flex align-items-center justify-content-center rounded" style={{ width: "60px", height: "60px" }}>
-                        Logo
-                    </div>
+                    <div className="game-logo">Logo</div>
                 )}
-                <div>
-                    <p className="mb-0 small text-muted">{game.genre}</p>
-                    <h5 className="mb-0">{game.title}</h5>
+                <div className="game-info">
+                    <p className="game-category">{game.category}</p>
+                    <h2 className="game-title">{game.title}</h2>
                 </div>
-                <i className="material-icons ms-auto">bookmark_border</i>
+                <i className="material-icons bookmark-icon">bookmark_border</i>
             </div>
-
-            <div>
-                <p className="mb-1">
-                    <i className="material-icons me-1" style={{ verticalAlign: "middle" }}>place</i>
-                    Rating: {game.rating}/5
+            <div className="game-footer">
+                <p className="game-rating">
+                    <i className="material-icons">place</i> Rating: {game.rating}/5
                 </p>
-                <p className="mb-0"><strong>{game.trophies || 0} Trophies</strong></p>
+                <p className="game-trophies">
+                    <strong>{game.trophiesUnlocked || 0} Trophies</strong>
+                </p>
             </div>
         </div>
     );
 };
-
 
 export default GameCard;
