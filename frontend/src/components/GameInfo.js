@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import { getAuth } from "firebase/auth";
 import { db } from "../authentication/firebaseConfig";
@@ -17,6 +17,32 @@ export default function GameInfo({
   const [rating, setRating] = useState(0);
   const [addedToPlaying, setAddedToPlaying] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
+
+
+//this checks Database to see if modal game is already in playing games (for green added button) 
+useEffect(() => {
+  const checkIfGameAdded = async () => {
+    setAddedToPlaying(false);
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user || !game) return;
+
+    const userGameRef = doc(db, "userGames", user.uid);
+    const docSnap = await getDoc(userGameRef);
+
+    if (docSnap.exists()) {
+      const existingGames = docSnap.data().games || [];
+      const alreadyExists = existingGames.some(
+        (existingGame) => existingGame.title === game.name
+      );
+      if (alreadyExists) {
+        setAddedToPlaying(true);
+      }
+    }
+  };
+
+  checkIfGameAdded();
+}, [game]);
 
   if (!game) return null;
 
@@ -105,6 +131,7 @@ export default function GameInfo({
       alert("Something went wrong.");
     }
   };
+
 
   return (
     <Modal show={show} onHide={handleClose} centered>

@@ -56,8 +56,8 @@ const GameRecommendationsCarousel = () => {
                 <Carousel
                     responsive={responsive}
                     infinite={true}
-                    // autoPlay={true}
-                    // autoPlaySpeed={2500}
+                    autoPlay={true}
+                    autoPlaySpeed={2500}
                     slidesToSlide={1}
                     arrows={true}
                     keyBoardControl={true}

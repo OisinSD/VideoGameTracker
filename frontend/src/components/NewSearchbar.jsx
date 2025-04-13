@@ -30,7 +30,7 @@ const fetchGame = async (myGameID) => {
          if(!response.ok) throw new Error("Failed to fetch game info");
          const gameInfo = await response.json();
   
-        // console.log("Full game info", gameInfo);
+        console.log("Full game info", gameInfo);
         triggerGameInfo(gameInfo);
       }catch(error){
           console.log("Error fetching Enter button game info:", error);
@@ -42,7 +42,7 @@ const fetchGame = async (myGameID) => {
       if (input.trim() === "") return;
 
       const firstGame = results[0];
-      // console.log("First game Data", firstGame);
+      console.log("First game Data", firstGame);
       fetchGame(firstGame.id);
     }
   };
