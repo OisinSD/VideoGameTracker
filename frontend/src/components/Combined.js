@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Form, Modal } from "react-bootstrap";
+import { Form, Modal, Button } from "react-bootstrap";
 
 export default function Combined({
-                                   show,
-                                   handleClose,
-                                   handleAddData,
-                                   triggerAddGame,
-                                   game,
-                                 }) {
+     show,
+     handleClose,
+     handleAddData,
+     triggerAddGame,
+     game,
+     onEdit,
+     handleDelete,
+ }) {
   const [review] = useState(game?.review || "");
   const [hoursPlayed] = useState(game?.hoursPlayed || "");
   const [rating] = useState(game?.rating || 0);
@@ -77,6 +79,28 @@ export default function Combined({
             <Form.Group className="mb-3">
               <h6>Hours Played ⏳: {game.hoursPlayed || "Not logged"}</h6>
             </Form.Group>
+            {/* Edit Button*/}
+            <Button
+                variant="warning"
+                size="sm"
+                onClick={onEdit}
+                style={{ marginTop: "15px" }}
+            >
+              Edit Game
+            </Button>
+
+            {/* Delete Button */}
+            <Button
+                variant="danger"
+                size="sm"
+                onClick={() => {
+                  handleDelete(game);
+                  handleClose();
+                }}
+                style={{ marginTop: "15px", marginLeft: "auto" }}
+            >
+              Delete Game
+            </Button>
           </Modal.Body>
         </Form>
       </Modal>
