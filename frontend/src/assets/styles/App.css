@@ -7,7 +7,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: black;
-  /* overflow: hidden; */
+  overflow: hidden;
   position: relative;
   left: 0;
 }
@@ -15,12 +15,9 @@ body {
 .banner-image {
   width: 100vw;
   height: 250px;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
-
-
-
 
 .App {
   text-align: center;
@@ -60,6 +57,3 @@ body {
     transform: rotate(360deg);
   }
 }
-
-
-
