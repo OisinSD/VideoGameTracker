@@ -3,7 +3,7 @@ import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import "../assets/styles/NewSearch.css";
 import { fetchGames } from "../API/api";
 
-export const NewSearchBar = ({ setResults, results, triggerGameInfo }) => {
+export const NewSearchBar = ({ setResults, results, triggerGameInfo, onSelectGame }) => {
   const [input, setInput] = useState("");
 
   const handleChange = async (value) => {
@@ -16,23 +16,34 @@ export const NewSearchBar = ({ setResults, results, triggerGameInfo }) => {
     }
   };
 
-  /* This is a test - if input is null results should be null */
-  // const myInput = document.getElementById("GameInput").innerHTML;
-  //     if(myInput.length === 0){
-  //         results.value = []; // if this does not work - change to "result"
-  //     }
-
   const clearInput = () => {
     setInput("");
     setResults([]);
   };
 
+const fetchGame = async (myGameID) => {
+      const API_KEY = "e784bf5f8e30437686ea67247443042d";
+      let url2 =  `https://api.rawg.io/api/games/${myGameID}?key=${API_KEY}`
+      
+      try{
+         const response = await fetch(url2);
+         if(!response.ok) throw new Error("Failed to fetch game info");
+         const gameInfo = await response.json();
+  
+        console.log("Full game info", gameInfo);
+        triggerGameInfo(gameInfo);
+      }catch(error){
+          console.log("Error fetching Enter button game info:", error);
+      }
+  }
+  
   const handleKeyDown = async (e) => {
     if (e.key === "Enter") {
       if (input.trim() === "") return;
 
       const firstGame = results[0];
-      triggerGameInfo(firstGame);
+      console.log("First game Data", firstGame);
+      fetchGame(firstGame.id);
     }
   };
 
