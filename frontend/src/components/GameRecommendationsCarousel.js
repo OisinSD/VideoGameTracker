@@ -53,15 +53,15 @@ const GameRecommendationsCarousel = () => {
                 <Carousel
                     responsive={responsive}
                     infinite={true}
-                    autoPlay={true}
-                    autoPlaySpeed={2500}
+                    // autoPlay={true}
+                    // autoPlaySpeed={2500}
                     slidesToSlide={1}
                     arrows={true}
                     keyBoardControl={true}
                     showDots={false}
                     pauseOnHover={false}
                     containerClass="carousel-container"
-                    itemClass="carousel-item-padding-20-px"  // 👈 add this class!
+                    // itemClass="carousel-item-padding-20-px"  // 👈 add this class!
                 >
 
                 {recommendations.map((game, index) => (

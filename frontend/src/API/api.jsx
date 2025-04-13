@@ -1,3 +1,4 @@
+
 export async function fetchGames(searchQuery = "") {
     const API_KEY = "e784bf5f8e30437686ea67247443042d"; // Your API key
     let url = `https://api.rawg.io/api/games?key=${API_KEY}`;
