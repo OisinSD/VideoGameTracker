@@ -4,6 +4,7 @@ import { db } from "../authentication/firebaseConfig";
 import React, { useEffect, useState } from "react";
 import GameCard from "./GameCard";
 import Combined from "../components/Combined";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const GameCardDisplay = ({ refreshTrigger }) => {
     const [games, setGames] = useState([]);
@@ -44,10 +45,14 @@ const GameCardDisplay = ({ refreshTrigger }) => {
 
     return (
         <section className="game-section">
-            {/* Playing Section */}
-            <div className="bg-secondary text-white py-3 w-100 text-center mt-4">
-                <h2 className="fw-bold text-uppercase">🎮 Currently Playing</h2>
+
+            {/* Currently Playing Header */}
+            <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom mt-4">
+                <h2 className="fw-semibold text-capitalize m-0" style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}>
+                    <i className="bi bi-hourglass-split me-2"></i>Currently Playing
+                </h2>
             </div>
+
             <div className="game-container">
                 {playingGames.length > 0 ? (
                     playingGames.map((game, index) => (
@@ -58,10 +63,13 @@ const GameCardDisplay = ({ refreshTrigger }) => {
                 )}
             </div>
 
-            {/* Library Section */}
-            <div className="bg-secondary text-white py-3 w-100 text-center mt-4">
-                <h2 className="fw-bold text-uppercase">🎮 Game Library</h2>
+            {/* Game Library Header */}
+            <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom mt-4">
+                <h2 className="fw-semibold text-capitalize m-0" style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}>
+                    <i className="bi bi-collection me-2"></i>Game Library
+                </h2>
             </div>
+
             <div className="game-container">
                 {libraryGames.length > 0 ? (
                     libraryGames.map((game, index) => (
