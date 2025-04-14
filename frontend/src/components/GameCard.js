@@ -9,7 +9,7 @@ const GameCard = ({ game, onClick }) => {
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`text-white bg-dark shadow-sm m-1 ${
+      className={`text-white bg-dark m-1 shadow-sm ${
         isHovered ? "border-light" : ""
       }`}
       style={{
