@@ -98,7 +98,7 @@ const HomePage = () => {
       <div
         style={{
           marginLeft: "220px",
-          marginTop: "250px",
+          // marginTop: "250px",
           width: "calc(100% - 220px)",
         }}
       >
