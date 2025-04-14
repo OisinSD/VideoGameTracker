@@ -15,12 +15,10 @@ body {
 .banner-image {
   width: 100vw;
   height: 250px;
+  /* object-fit: cover; */
   object-fit: contain;
   display: block;
 }
-
-
-
 
 .App {
   text-align: center;
@@ -60,6 +58,3 @@ body {
     transform: rotate(360deg);
   }
 }
-
-
-
