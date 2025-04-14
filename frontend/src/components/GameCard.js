@@ -1,35 +1,39 @@
 import React from "react";
+import { Card } from "react-bootstrap";
 
 const GameCard = ({ game, onClick }) => {
-    return (
-        <div className="game-card mx-3" onClick={onClick} style={{ cursor: "pointer" }}>
-            <div className="game-header">
-                {game.poster ? (
-                    <img
-                        src={game.poster}
-                        alt={`${game.title} Poster`}
-                        className="game-logo"
-                        style={{ width: "100px", height: "100px", objectFit: "cover" }}
-                    />
-                ) : (
-                    <div className="game-logo">Logo</div>
-                )}
-                <div className="game-info">
-                    <p className="game-category">{game.category}</p>
-                    <h2 className="game-title">{game.title}</h2>
-                </div>
-                <i className="material-icons bookmark-icon">bookmark_border</i>
-            </div>
-            <div className="game-footer">
-                <p className="game-rating">
-                    <i className="material-icons">place</i> Rating: {game.rating}/5
-                </p>
-                <p className="game-trophies">
-                    <strong>{game.trophiesUnlocked || 0} Trophies</strong>
-                </p>
-            </div>
-        </div>
-    );
+  return (
+    <Card
+      onClick={onClick}
+      className="text-white bg-dark h-100"
+      style={{ borderRadius: "12px", cursor: "pointer" }}
+    >
+      <Card.Img
+        variant="top"
+        src={game.poster}
+        alt={`${game.title} Poster`}
+        style={{
+          height: "200px",
+          objectFit: "cover",
+          borderTopLeftRadius: "12px",
+          borderTopRightRadius: "12px",
+          width: "100%",
+          objectPosition: "center",
+        }}
+      />
+
+      <Card.Body>
+        <Card.Title className="fw-semibold fs-5">{game.title}</Card.Title>
+        <Card.Text className="text-light mb-2">
+          <i className="bi bi-geo-alt-fill me-2"></i>
+          Rating: {game.rating}/5
+        </Card.Text>
+        <Card.Text className="text-light">
+          <strong>{game.trophiesUnlocked || 0} Trophies</strong>
+        </Card.Text>
+      </Card.Body>
+    </Card>
+  );
 };
 
 export default GameCard;
