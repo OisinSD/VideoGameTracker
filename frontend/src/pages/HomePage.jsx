@@ -12,8 +12,8 @@ import { signOut } from "firebase/auth";
 import { auth } from "../authentication/firebaseConfig";
 import GameCardDisplay from "../components/GameCardDisplay";
 import GameRecommendationsCarousel from "../components/GameRecommendationsCarousel";
-import editedBanner from "../assets/images/edited_banner.png";
-
+import PixelRunner from "../components/PixelRunner";
+import Sidebar from "../components/Sidebar";
 
 const HomePage = () => {
   // const [selectedGame, setSelectedGame] = useState(null);
@@ -27,6 +27,7 @@ const HomePage = () => {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [refreshGames, setRefreshGames] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
   const triggerGameInfo = (game) => {
     setSelectedGame(game);
@@ -48,96 +49,73 @@ const HomePage = () => {
     setShowAddModal(true);
   };
 
+  const handleLogout = () => {
+    signOut(auth);
+  };
+
   return (
     <div className="home-page">
+      {/* Banner and search bar */}
       <header className="position-relative">
         <div className="banner-wrapper">
-          {/* <img
-            src="/VideoGameCharacters-JuegoStudioBackground.png"
-            alt="Banner"
-            className="banner-image"
-            style={{height:"30vh"}}
-          /> */}
-          <div
-            className="banner"
-            style={{
-              position: "relative",
-              backgroundImage: `url(${editedBanner})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center 30%",
-              height: "27vh",
-              width: "100%",
-              borderBottom: "2px solid white",
-              // opacity: 0.6,
-            }}
-          >
-            {/* Content inside banner */}
           <div className="banner">
             {/* Profile button */}
             <div className="position-absolute top-0 start-0 m-3">
-              <Button
+              <button
                 onClick={() => setShowProfileModal(true)}
                 className="btn btn-lg"
                 style={{
                   background: "linear-gradient(90deg, #7f57f5, #e157f5)",
                   border: "none",
                 }}
-                >
+              >
                 Profile
-              </Button>
+              </button>
             </div>
 
-            {/* Top-right corner: Add Game + Logout */}
-              <div className="position-absolute top-0 end-0 m-3 d-flex gap-2">
-                  {/*}
-              <Button
-              variant="primary"
-              onClick={() => setShowAddModal(true)} // 👈 open AddGame instead
-              className="btn btn-lg w-30"
-              style={{
-                background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                border: "none",
-                }}
-                >
-                <Plus size={20} /> Add Game
-                </Button>
-                */}
+            {/* ⬇️ Add PixelRunner here */}
+            <PixelRunner />
 
-                  <Button
-                      className="btn btn-lg"
-                      style={{
-                        background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                        border: "none",
-                      }}
-                      onClick={() => signOut(auth)}
-                      >
-                      Logout
-                  </Button>
-
-              </div>
-          </div>
-
-            {/* Search bar only */}
+            {/* Search bar only*/}
             <div className="search-bar-container">
-                <NewSearchBar
-                    setResults={setResults}
-                    results={results}
-                    triggerGameInfo={handleGameSelectFromSearch}
-                    />
-
-            <SearchResults
-              results={results}
-              onSelectGame={handleGameSelectFromSearch}
+              <NewSearchBar
+                setResults={setResults}
+                results={results}
+                triggerGameInfo={handleGameSelectFromSearch}
               />
+              <SearchResults
+                results={results}
+                onSelectGame={handleGameSelectFromSearch}
+              />
+            </div>
           </div>
         </div>
-              </div>
       </header>
 
-        <GameRecommendationsCarousel />
+      {/* Sidebar and Main Content */}
 
-
-        <GameCardDisplay refreshTrigger={refreshGames} />
+      <Sidebar onLogout={handleLogout} onSelectSection={setActiveSection} />
+      <div
+        style={{
+          marginLeft: "220px",
+          // marginTop: "250px",
+          width: "calc(100% - 220px)",
+        }}
+      >
+        {activeSection === "home" && <GameRecommendationsCarousel />}
+        {activeSection === "playing" && (
+          <GameCardDisplay
+            refreshTrigger={refreshGames}
+            showPlayingOnly={true}
+          />
+        )}
+        {activeSection === "library" && (
+          <GameCardDisplay
+            refreshTrigger={refreshGames}
+            showLibraryOnly={true}
+          />
+        )}
+      </div>
 
       {/* Modals */}
       <ProfilePage
