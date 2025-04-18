@@ -35,60 +35,123 @@ const ProfilePage = ({ show, handleClose, refreshTrigger }) => {
   if (!user) return null;
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton className="bg-dark text-light">
-        <h2 className="fw-bold m-0">Profile</h2>
-      </Modal.Header>
-
-      <Modal.Body className="bg-dark text-light">
-        <div className="text-center mb-4">
-          <img
-            src={gamerAvatar}
-            alt="Profile"
-            className="rounded-circle mb-3"
-            style={{ width: "120px", height: "120px", objectFit: "cover" }}
-          />
-          <h5>{user.displayName || user.email}</h5>
-        </div>
-
-        <div className="mb-3">
-          <h6 className="text-secondary mb-1">Username</h6>
-          <p className="m-0">{user.displayName || "Not Set"}</p>
-        </div>
-
-        <div className="mb-3">
-          <h6 className="text-secondary mb-1">Email</h6>
-          <p className="m-0">{user.email}</p>
-        </div>
-
-        <div className="mb-3">
-          <h6 className="text-secondary mb-1">Games Played 🎮</h6>
-          <p className="m-0">{gamesPlayed}</p>
-        </div>
-
-        <div className="mb-3">
-          <h6 className="text-secondary mb-1">Total Achievements 🏆</h6>
-          <p className="m-0">{totalAchievements}</p>
-        </div>
-
-        <div className="mb-4">
-          <h6 className="text-secondary mb-1">Achievement Completion 📈</h6>
-          <p className="m-0">{achievementCompletion}%</p>
-        </div>
-
-        <Button
-          onClick={handleClose}
-          className="w-100"
+      <div
+          className="text-light"
           style={{
-            background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-            border: "none",
+            backgroundColor: "#121212",
+            minHeight: "100vh",
+            padding: "4rem",
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: "2rem",
+            marginTop: "2rem",
           }}
+      >
+        <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "4rem",
+              flexWrap: "wrap",
+              maxWidth: "1200px",
+              width: "100%",
+            }}
         >
-          Close
-        </Button>
-      </Modal.Body>
-    </Modal>
+          {/* Left: Large Profile Image */}
+          <div>
+            <img
+                src={gamerAvatar}
+                alt="Profile"
+                className="rounded-circle"
+                style={{
+                  width: "600px",
+                  height: "600px",
+                  objectFit: "cover",
+                  border: "4px solid #7f57f5",
+                }}
+            />
+          </div>
+
+          {/* Right: Text Info */}
+          <div style={{ flex: 1, minWidth: "300px" }}>
+            {/* Username (Main heading - white color) */}
+            <h1
+                className="fw-bold mb-4"
+                style={{ color: "white", fontSize: "3rem" }} // Original size
+            >
+              {user.displayName || user.email}
+            </h1>
+
+            {/* Subheading Section */}
+            <div className="mb-4">
+              <h4
+                  className="fw-bold mb-1"
+                  style={{
+                    fontSize: "1.5rem", // Original size
+                    color: "rgb(127, 87, 245)", // Purple color
+                  }}
+              >
+                Username
+              </h4>
+              <p style={{ fontSize: "1.5rem" }}>{user.displayName || "Not Set"}</p>
+            </div>
+
+            <div className="mb-4">
+              <h4
+                  className="fw-bold mb-1"
+                  style={{
+                    fontSize: "1.5rem", // Original size
+                    color: "rgb(127, 87, 245)", // Purple color
+                  }}
+              >
+                Email
+              </h4>
+              <p style={{ fontSize: "1.5rem" }}>{user.email}</p>
+            </div>
+
+            <div className="mb-4">
+              <h4
+                  className="fw-bold mb-1"
+                  style={{
+                    fontSize: "1.5rem", // Original size
+                    color: "rgb(127, 87, 245)", // Purple color
+                  }}
+              >
+                Games Played 🎮
+              </h4>
+              <p style={{ fontSize: "1.5rem" }}>{gamesPlayed}</p>
+            </div>
+
+            <div className="mb-4">
+              <h4
+                  className="fw-bold mb-1"
+                  style={{
+                    fontSize: "1.5rem", // Original size
+                    color: "rgb(127, 87, 245)", // Purple color
+                  }}
+              >
+                Total Achievements 🏆
+              </h4>
+              <p style={{ fontSize: "1.5rem" }}>{totalAchievements}</p>
+            </div>
+
+            <div className="mb-4">
+              <h4
+                  className="fw-bold mb-1"
+                  style={{
+                    fontSize: "1.5rem", // Original size
+                    color: "rgb(127, 87, 245)", // Purple color
+                  }}
+              >
+                Achievement Completion 📈
+              </h4>
+              <p style={{ fontSize: "1.5rem" }}>{achievementCompletion}%</p>
+            </div>
+          </div>
+        </div>
+      </div>
   );
+
 };
 
 export default ProfilePage;
