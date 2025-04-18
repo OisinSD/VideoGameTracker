@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-
 import { Button } from "react-bootstrap";
+import { List } from "react-bootstrap-icons"; // Hamburger icon
 
 import { SearchResults } from "../components/SearchResults";
 import AddGame from "../components/AddGame";
@@ -16,18 +16,15 @@ import PixelRunner from "../components/PixelRunner";
 import Sidebar from "../components/Sidebar";
 
 const HomePage = () => {
-  // const [selectedGame, setSelectedGame] = useState(null);
   const [results, setResults] = useState([]);
-  // const [showAddModal, setShowAddModal] = useState(false);
-  // const [showInfoModal, setShowInfoModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-
   const [selectedGame, setSelectedGame] = useState(null);
   const [addGameData, setAddGameData] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [refreshGames, setRefreshGames] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [sidebarVisible, setSidebarVisible] = useState(false); // New
 
   const triggerGameInfo = (game) => {
     setSelectedGame(game);
@@ -59,8 +56,23 @@ const HomePage = () => {
       <header className="position-relative">
         <div className="banner-wrapper">
           <div className="banner">
-            {/* Profile button */}
+            {/* Sidebar toggle (hamburger icon) */}
             <div className="position-absolute top-0 start-0 m-3">
+              <Button
+                variant="light"
+                onClick={() => setSidebarVisible(!sidebarVisible)}
+                style={{
+                  opacity: 0.7,
+                  backgroundColor: "white",
+                  border: "none",
+                }}
+              >
+                <List size={30} />
+              </Button>
+            </div>
+
+            {/* Profile button - hide for now
+            <div className="position-absolute top-0 end-0 m-3">
               <button
                 onClick={() => setShowProfileModal(true)}
                 className="btn btn-lg"
@@ -71,7 +83,7 @@ const HomePage = () => {
               >
                 Profile
               </button>
-            </div>
+            </div> */}
 
             {/* ⬇️ Add PixelRunner here */}
             <PixelRunner />
@@ -92,27 +104,29 @@ const HomePage = () => {
         </div>
       </header>
 
-      {/* Sidebar and Main Content */}
+      {/* Sidebar and main content */}
+      {sidebarVisible && (
+        <Sidebar onLogout={handleLogout} onSelectSection={setActiveSection} />
+      )}
 
-      <Sidebar onLogout={handleLogout} onSelectSection={setActiveSection} />
       <div
         style={{
-          marginLeft: "220px",
-          // marginTop: "250px",
-          width: "calc(100% - 220px)",
+          marginLeft: sidebarVisible ? "220px" : "0px",
+          transition: "margin-left 0.3s ease",
+          padding: "20px",
         }}
       >
         {activeSection === "home" && <GameRecommendationsCarousel />}
         {activeSection === "playing" && (
           <GameCardDisplay
             refreshTrigger={refreshGames}
-            showPlayingOnly={true}
+            viewSection="playing"
           />
         )}
         {activeSection === "library" && (
           <GameCardDisplay
             refreshTrigger={refreshGames}
-            showLibraryOnly={true}
+            viewSection="library"
           />
         )}
       </div>

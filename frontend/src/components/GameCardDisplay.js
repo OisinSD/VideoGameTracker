@@ -9,7 +9,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { updateDoc } from "firebase/firestore";
 import EditGameModal from "./EditGameModal";
 
-const GameCardDisplay = ({ refreshTrigger }) => {
+const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -113,20 +113,27 @@ const GameCardDisplay = ({ refreshTrigger }) => {
   return (
     <>
       <section className="game-section">
-        {/* {!showLibraryOnly && ( */}
-        <>
-          <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom mt-4">
-            <h2
-              className="fw-semibold text-capitalize m-0"
-              style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}
-            >
-              <i className="bi bi-hourglass-split me-2"></i>Currently Playing
-            </h2>
-          </div>
+        <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom mt-4">
+          <h2
+            className="fw-semibold text-capitalize m-0"
+            style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}
+          >
+            <i
+              className={`bi ${
+                viewSection === "playing"
+                  ? "bi-hourglass-split"
+                  : "bi-controller"
+              } me-2`}
+            ></i>
+            {viewSection === "playing" ? "Currently Playing" : "Library"}
+          </h2>
+        </div>
 
-          <div className="game-container">
-            {libraryGames.length > 0 ? (
-              libraryGames.map((game, index) => (
+        <div className="game-container">
+          {(viewSection === "playing" ? playingGames : libraryGames).length >
+          0 ? (
+            (viewSection === "playing" ? playingGames : libraryGames).map(
+              (game, index) => (
                 <GameCard
                   key={index}
                   game={game}
@@ -134,13 +141,16 @@ const GameCardDisplay = ({ refreshTrigger }) => {
                   onDelete={handleDeleteGame}
                   onEdit={handleEditClick}
                 />
-              ))
-            ) : (
-              <p className="text-light text-center">No games finished yet</p>
-            )}
-          </div>
-        </>
-        )}
+              )
+            )
+          ) : (
+            <p className="text-light text-center">
+              {viewSection === "playing"
+                ? "No games currently being played."
+                : "No games finished yet."}
+            </p>
+          )}
+        </div>
       </section>
 
       {/* Modal for Game Info */}

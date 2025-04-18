@@ -7,6 +7,8 @@ import {
   CollectionPlay,
   BoxArrowRight,
   HourglassSplit,
+  PersonCircle,
+  Joystick,
 } from "react-bootstrap-icons";
 
 const Sidebar = ({ onLogout, onSelectSection }) => {
@@ -31,6 +33,22 @@ const Sidebar = ({ onLogout, onSelectSection }) => {
       >
         <CollectionPlay className="icon" />
         <span>Library</span>
+      </button>
+
+      <button
+        className="sidebar-link"
+        onClick={() => onSelectSection("allGames")}
+      >
+        <Joystick className="icon" />
+        <span>All Games</span>
+      </button>
+
+      <button
+        className="sidebar-link"
+        onClick={() => onSelectSection("profile")}
+      >
+        <PersonCircle className="icon" />
+        <span>Profile</span>
       </button>
 
       <button className="sidebar-link" onClick={onLogout}>
