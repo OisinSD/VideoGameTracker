@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
 import { Joystick } from "react-bootstrap-icons";
 import GameCard from "./GameCard";
+import GameInfo from "./GameInfo";
 
 const API_KEY = "e784bf5f8e30437686ea67247443042d";
 
@@ -10,6 +11,34 @@ const AllGamesPage = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const handleCardClick = async (gameId) => {
+    try {
+      const res = await fetch(
+        `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`
+      );
+      const data = await res.json();
+
+      setSelectedGame({
+        id: data.id,
+        name: data.name,
+        rating: data.rating,
+        background_image: data.background_image,
+        description: data.description_raw || "No description available.",
+        metacritic: data.metacritic || "N/A",
+        parent_platforms: data.parent_platforms || [],
+        publishers: data.publishers || [],
+        genres: data.genres || [],
+        released: data.released || "Unknown",
+        parent_achievements_count: data.achievements_count || 0,
+      });
+
+      setShowInfoModal(true);
+    } catch (error) {
+      console.error("Failed to fetch game details:", error);
+    }
+  };
 
   const fetchGames = async (pageNum = 1) => {
     setLoading(true);
@@ -76,7 +105,7 @@ const AllGamesPage = () => {
                 poster: game.background_image,
                 trophiesUnlocked: 0,
               }}
-              onClick={() => console.log("Clicked:", game.name)}
+              onClick={() => handleCardClick(game.id)}
             />
           ))}
         </div>
@@ -89,6 +118,12 @@ const AllGamesPage = () => {
           </div>
         )}
       </Container>
+
+      <GameInfo
+        show={showInfoModal}
+        handleClose={() => setShowInfoModal(false)}
+        game={selectedGame}
+      />
     </div>
   );
 };
