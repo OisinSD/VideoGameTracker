@@ -168,11 +168,20 @@ const HomePage = () => {
       </div>
 
       {/* Modals */}
-      <ProfilePage
-        show={showProfileModal}
-        handleClose={() => setShowProfileModal(false)}
-        refreshTrigger={refreshGames}
-      />
+        {activeSection === "profile" && (
+            <div
+                style={{
+                    marginLeft: sidebarVisible ? "220px" : "0px",
+                    transition: "margin-left 0.3s ease",
+                    padding: "20px",
+                }}
+            >
+                <ProfilePage
+                    refreshTrigger={refreshGames}
+                    onBack={() => setActiveSection("home")}
+                />
+            </div>
+        )}
       <AddGame
         show={showAddModal}
         handleClose={() => setShowAddModal(false)}
