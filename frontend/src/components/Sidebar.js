@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { forwardRef } from "react";
+// import { Link } from "react-router-dom";
 import "../assets/styles/Sidebar.css";
 
 import {
@@ -11,9 +11,9 @@ import {
   Joystick,
 } from "react-bootstrap-icons";
 
-const Sidebar = ({ onLogout, onSelectSection }) => {
+const Sidebar = forwardRef(({ onLogout, onSelectSection }, ref) => {
   return (
-    <div className="sidebar">
+    <div className="sidebar" ref={ref}>
       <button className="sidebar-link" onClick={() => onSelectSection("home")}>
         <House className="icon" />
         <span>Home</span>
@@ -57,6 +57,6 @@ const Sidebar = ({ onLogout, onSelectSection }) => {
       </button>
     </div>
   );
-};
+});
 
 export default Sidebar;

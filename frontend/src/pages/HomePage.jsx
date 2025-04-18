@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "react-bootstrap";
-import { List } from "react-bootstrap-icons"; // Hamburger icon
+import { List } from "react-bootstrap-icons";
 
 import { SearchResults } from "../components/SearchResults";
 import AddGame from "../components/AddGame";
@@ -24,7 +24,8 @@ const HomePage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [refreshGames, setRefreshGames] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const [sidebarVisible, setSidebarVisible] = useState(false); // New
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const sidebarRef = useRef(null);
 
   const triggerGameInfo = (game) => {
     setSelectedGame(game);
@@ -50,17 +51,36 @@ const HomePage = () => {
     signOut(auth);
   };
 
+  const handleToggleSidebar = () => {
+    setSidebarVisible((prevVisible) => {
+      const newVisible = !prevVisible;
+      if (!prevVisible) {
+        setTimeout(() => {
+          if (sidebarRef.current) {
+            const sidebarTop =
+              sidebarRef.current.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({
+              top: sidebarTop - 20,
+              behavior: "smooth",
+            });
+          }
+        }, 100);
+      }
+      return newVisible;
+    });
+  };
+
   return (
     <div className="home-page">
       {/* Banner and search bar */}
       <header className="position-relative">
         <div className="banner-wrapper">
           <div className="banner">
-            {/* Sidebar toggle (hamburger icon) */}
+            {/* Sidebar toggle */}
             <div className="position-absolute top-0 start-0 m-3">
               <Button
                 variant="light"
-                onClick={() => setSidebarVisible(!sidebarVisible)}
+                onClick={handleToggleSidebar}
                 style={{
                   opacity: 0.7,
                   backgroundColor: "white",
@@ -106,7 +126,11 @@ const HomePage = () => {
 
       {/* Sidebar and main content */}
       {sidebarVisible && (
-        <Sidebar onLogout={handleLogout} onSelectSection={setActiveSection} />
+        <Sidebar
+          ref={sidebarRef}
+          onLogout={handleLogout}
+          onSelectSection={setActiveSection}
+        />
       )}
 
       <div
@@ -116,7 +140,19 @@ const HomePage = () => {
           padding: "20px",
         }}
       >
-        {activeSection === "home" && <GameRecommendationsCarousel />}
+        {activeSection === "home" && (
+          <>
+            <GameRecommendationsCarousel />
+            <GameCardDisplay
+              refreshTrigger={refreshGames}
+              viewSection="playing"
+            />
+            <GameCardDisplay
+              refreshTrigger={refreshGames}
+              viewSection="library"
+            />
+          </>
+        )}
         {activeSection === "playing" && (
           <GameCardDisplay
             refreshTrigger={refreshGames}
