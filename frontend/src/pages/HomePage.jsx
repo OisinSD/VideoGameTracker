@@ -14,6 +14,7 @@ import GameCardDisplay from "../components/GameCardDisplay";
 import GameRecommendationsCarousel from "../components/GameRecommendationsCarousel";
 import PixelRunner from "../components/PixelRunner";
 import Sidebar from "../components/Sidebar";
+import AllGamesPage from "../components/AllGamesPage";
 
 const HomePage = () => {
   const [results, setResults] = useState([]);
@@ -165,23 +166,24 @@ const HomePage = () => {
             viewSection="library"
           />
         )}
+        {activeSection === "allGames" && <AllGamesPage />}
       </div>
 
       {/* Modals */}
-        {activeSection === "profile" && (
-            <div
-                style={{
-                    marginLeft: sidebarVisible ? "220px" : "0px",
-                    transition: "margin-left 0.3s ease",
-                    padding: "20px",
-                }}
-            >
-                <ProfilePage
-                    refreshTrigger={refreshGames}
-                    onBack={() => setActiveSection("home")}
-                />
-            </div>
-        )}
+      {activeSection === "profile" && (
+        <div
+          style={{
+            marginLeft: sidebarVisible ? "220px" : "0px",
+            transition: "margin-left 0.3s ease",
+            padding: "20px",
+          }}
+        >
+          <ProfilePage
+            refreshTrigger={refreshGames}
+            onBack={() => setActiveSection("home")}
+          />
+        </div>
+      )}
       <AddGame
         show={showAddModal}
         handleClose={() => setShowAddModal(false)}
