@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-
+import React, { useState, useRef } from "react";
 import { Button } from "react-bootstrap";
+import { List } from "react-bootstrap-icons";
 
 import { SearchResults } from "../components/SearchResults";
 import AddGame from "../components/AddGame";
@@ -14,20 +14,19 @@ import GameCardDisplay from "../components/GameCardDisplay";
 import GameRecommendationsCarousel from "../components/GameRecommendationsCarousel";
 import PixelRunner from "../components/PixelRunner";
 import Sidebar from "../components/Sidebar";
+import AllGamesPage from "../components/AllGamesPage";
 
 const HomePage = () => {
-  // const [selectedGame, setSelectedGame] = useState(null);
   const [results, setResults] = useState([]);
-  // const [showAddModal, setShowAddModal] = useState(false);
-  // const [showInfoModal, setShowInfoModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-
   const [selectedGame, setSelectedGame] = useState(null);
   const [addGameData, setAddGameData] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [refreshGames, setRefreshGames] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const sidebarRef = useRef(null);
 
   const triggerGameInfo = (game) => {
     setSelectedGame(game);
@@ -53,14 +52,48 @@ const HomePage = () => {
     signOut(auth);
   };
 
+  const handleToggleSidebar = () => {
+    setSidebarVisible((prevVisible) => {
+      const newVisible = !prevVisible;
+      if (!prevVisible) {
+        setTimeout(() => {
+          if (sidebarRef.current) {
+            const sidebarTop =
+              sidebarRef.current.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({
+              top: sidebarTop - 20,
+              behavior: "smooth",
+            });
+          }
+        }, 100);
+      }
+      return newVisible;
+    });
+  };
+
   return (
     <div className="home-page">
       {/* Banner and search bar */}
       <header className="position-relative">
         <div className="banner-wrapper">
           <div className="banner">
-            {/* Profile button */}
+            {/* Sidebar toggle */}
             <div className="position-absolute top-0 start-0 m-3">
+              <Button
+                variant="light"
+                onClick={handleToggleSidebar}
+                style={{
+                  opacity: 0.7,
+                  backgroundColor: "white",
+                  border: "none",
+                }}
+              >
+                <List size={30} />
+              </Button>
+            </div>
+
+            {/* Profile button - hide for now
+            <div className="position-absolute top-0 end-0 m-3">
               <button
                 onClick={() => setShowProfileModal(true)}
                 className="btn btn-lg"
@@ -71,7 +104,7 @@ const HomePage = () => {
               >
                 Profile
               </button>
-            </div>
+            </div> */}
 
             {/* ⬇️ Add PixelRunner here */}
             <PixelRunner />
@@ -92,37 +125,65 @@ const HomePage = () => {
         </div>
       </header>
 
-      {/* Sidebar and Main Content */}
+      {/* Sidebar and main content */}
+      {sidebarVisible && (
+        <Sidebar
+          ref={sidebarRef}
+          onLogout={handleLogout}
+          onSelectSection={setActiveSection}
+        />
+      )}
 
-      <Sidebar onLogout={handleLogout} onSelectSection={setActiveSection} />
       <div
         style={{
-          marginLeft: "220px",
-          // marginTop: "250px",
-          width: "calc(100% - 220px)",
+          marginLeft: sidebarVisible ? "220px" : "0px",
+          transition: "margin-left 0.3s ease",
+          padding: "20px",
         }}
       >
-        {activeSection === "home" && <GameRecommendationsCarousel />}
+        {activeSection === "home" && (
+          <>
+            <GameRecommendationsCarousel />
+            <GameCardDisplay
+              refreshTrigger={refreshGames}
+              viewSection="playing"
+            />
+            <GameCardDisplay
+              refreshTrigger={refreshGames}
+              viewSection="library"
+            />
+          </>
+        )}
         {activeSection === "playing" && (
           <GameCardDisplay
             refreshTrigger={refreshGames}
-            showPlayingOnly={true}
+            viewSection="playing"
           />
         )}
         {activeSection === "library" && (
           <GameCardDisplay
             refreshTrigger={refreshGames}
-            showLibraryOnly={true}
+            viewSection="library"
           />
         )}
+        {activeSection === "allGames" && <AllGamesPage />}
       </div>
 
       {/* Modals */}
-      <ProfilePage
-        show={showProfileModal}
-        handleClose={() => setShowProfileModal(false)}
-        refreshTrigger={refreshGames}
-      />
+      {activeSection === "profile" && (
+        <div
+          style={{
+            marginLeft: sidebarVisible ? "220px" : "0px",
+            transition: "margin-left 0.3s ease",
+            padding: "20px",
+          }}
+        >
+          <ProfilePage
+            refreshTrigger={refreshGames}
+            onBack={() => setActiveSection("home")}
+          />
+        </div>
+      )}
       <AddGame
         show={showAddModal}
         handleClose={() => setShowAddModal(false)}
