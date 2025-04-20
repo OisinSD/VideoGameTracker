@@ -1,7 +1,7 @@
-import { Card } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import React, { useState } from "react";
 
-const GameCard = ({ game, onClick }) => {
+const GameCard = ({ game, onClick, onDelete, onEdit }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -21,6 +21,7 @@ const GameCard = ({ game, onClick }) => {
           ? "0 12px 24px rgba(255, 255, 255, 0.15)"
           : "0 4px 8px rgba(0, 0, 0, 0.2)",
         transition: "all 0.3s ease",
+        position: "relative",
       }}
     >
       <Card.Img
@@ -45,6 +46,28 @@ const GameCard = ({ game, onClick }) => {
         <Card.Text className="text-light">
           <strong>{game.trophiesUnlocked || 0} Trophies</strong>
         </Card.Text>
+          {isHovered && (
+              <div
+                  style={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "10px",
+                      display: "flex",
+                      gap: "10px",
+                  }}
+              >
+                  <Button variant="warning" size="sm" onClick={() => onEdit(game)}>
+                      Edit
+                  </Button>
+                  <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => onDelete(game)}
+                  >
+                      Delete
+                  </Button>
+              </div>
+          )}
       </Card.Body>
     </Card>
   );

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import GameCard from "./GameCard";
+//import GameCard from "./GameCard";
+import GameCardNoButtons from "./GameCardNoButtons";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const responsive = {
@@ -67,7 +68,7 @@ const GameRecommendationsCarousel = () => {
                     itemClass="carousel-item-padding-20-px"
                 >
                     {recommendations.map((game, index) => (
-                        <GameCard key={index} game={game} />
+                        <GameCardNoButtons key={index} game={game} />
                     ))}
                 </Carousel>
             </div>
