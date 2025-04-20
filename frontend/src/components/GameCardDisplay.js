@@ -64,6 +64,7 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
     if (!user) return;
 
     const userGamesRef = doc(db, "userGames", user.uid);
+    const userProfilRef = doc(db, "userProfil", user.uid);
     const updatedGames = games.filter(
       (game) =>
         !(
@@ -77,6 +78,32 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
       await updateDoc(userGamesRef, {
         games: updatedGames,
       });
+      const profileSnap = await getDoc(userProfilRef);
+      if (profileSnap.exists()) {
+        const profileData = profileSnap.data();
+
+        const updatedGamesPlayed = Math.max(
+          (profileData.gamesPlayed || 1) - 1,
+          0
+        );
+        const updatedTotalAchievements = Math.max(
+          (profileData.totalAchievements || 0) -
+            (gameToDelete.trophiesUnlocked || 0),
+          0
+        );
+
+        const maxTrophies = 100 * updatedGamesPlayed;
+        const updatedAchievementCompletion = maxTrophies
+          ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
+          : 0;
+
+        await updateDoc(userProfilRef, {
+          gamesPlayed: updatedGamesPlayed,
+          totalAchievements: updatedTotalAchievements,
+          achievementCompletion: updatedAchievementCompletion,
+        });
+      }
+
       setGames(updatedGames);
     } catch (error) {
       console.error("Failed to delete game:", error);
@@ -94,6 +121,13 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
     if (!user) return;
 
     const userGamesRef = doc(db, "userGames", user.uid);
+    const userProfilRef = doc(db, "userProfil", user.uid);
+
+    const originalGame = games.find(
+      (g) =>
+        g.title === updatedGame.title && g.category === updatedGame.category
+    );
+
     const updatedGames = games.map((g) =>
       g.title === updatedGame.title && g.category === updatedGame.category
         ? updatedGame
@@ -104,6 +138,34 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
       await updateDoc(userGamesRef, {
         games: updatedGames,
       });
+
+      if (
+        originalGame &&
+        originalGame.trophiesUnlocked !== updatedGame.trophiesUnlocked
+      ) {
+        const profileSnap = await getDoc(userProfilRef);
+        if (profileSnap.exists()) {
+          const profileData = profileSnap.data();
+          const oldTrophies = originalGame.trophiesUnlocked || 0;
+          const newTrophies = updatedGame.trophiesUnlocked || 0;
+
+          const diff = newTrophies - oldTrophies;
+          const updatedTotalAchievements =
+            (profileData.totalAchievements || 0) + diff;
+          const gamesPlayed = profileData.gamesPlayed || updatedGames.length;
+          const maxTrophies = 100 * gamesPlayed;
+
+          const updatedAchievementCompletion = maxTrophies
+            ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
+            : 0;
+
+          await updateDoc(userProfilRef, {
+            totalAchievements: updatedTotalAchievements,
+            achievementCompletion: updatedAchievementCompletion,
+          });
+        }
+      }
+
       setGames(updatedGames); // UI update
       setSelectedGame(updatedGame);
     } catch (error) {

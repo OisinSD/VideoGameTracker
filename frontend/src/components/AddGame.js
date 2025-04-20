@@ -39,6 +39,7 @@ export default function AddGame({
       hoursPlayed: parseInt(hoursPlayed),
       addedAt: new Date(),
       currentlyPlaying: false,
+      gameID: game?.id || null,
     };
 
     const userGameRef = doc(db, "userGames", user.uid);
@@ -54,23 +55,17 @@ export default function AddGame({
       );
 
       if (index !== -1) {
-        const wasCurrentlyPlaying = existingGames[index].currentlyPlaying;
-
         existingGames[index] = gameData;
         await updateDoc(userGameRef, { games: existingGames });
 
-        if (wasCurrentlyPlaying) {
-          isNewGame = true;
-        } else {
-          isNewGame = false;
-        }
-
         alert("Game updated in your library!");
+        isNewGame = false;
       } else {
         await updateDoc(userGameRef, {
           games: [...existingGames, gameData],
         });
         alert("Game added to your Library!");
+        isNewGame = true;
       }
     }
 
