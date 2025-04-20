@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
 import { Joystick } from "react-bootstrap-icons";
-import GameCard from "./GameCard";
+import GameCardNoButtons from "./GameCardNoButtons";
 import GameInfo from "./GameInfo";
 
 const API_KEY = "e784bf5f8e30437686ea67247443042d";
@@ -96,7 +96,7 @@ const AllGamesPage = () => {
         {/* Gamecard display */}
         <div className="game-container">
           {games.map((game) => (
-            <GameCard
+            <GameCardNoButtons
               key={game.id}
               game={{
                 id: game.id,
