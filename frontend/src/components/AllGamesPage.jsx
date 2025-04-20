@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Spinner } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import { Joystick } from "react-bootstrap-icons";
 import GameCardNoButtons from "./GameCardNoButtons";
 import GameInfo from "./GameInfo";
@@ -13,13 +13,17 @@ const AllGamesPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [selectedGame, setSelectedGame] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+
+  // 新增：排序 & 平台筛选状态
+  const [sortOrder, setSortOrder] = useState("");
+  const [platformFilter, setPlatformFilter] = useState("");
+
   const handleCardClick = async (gameId) => {
     try {
       const res = await fetch(
         `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`
       );
       const data = await res.json();
-
       setSelectedGame({
         id: data.id,
         name: data.name,
@@ -33,7 +37,6 @@ const AllGamesPage = () => {
         released: data.released || "Unknown",
         parent_achievements_count: data.achievements_count || 0,
       });
-
       setShowInfoModal(true);
     } catch (error) {
       console.error("Failed to fetch game details:", error);
@@ -48,7 +51,7 @@ const AllGamesPage = () => {
       );
       const data = await res.json();
       if (data.results && data.results.length > 0) {
-        setGames((prevGames) => [...prevGames, ...data.results]);
+        setGames((prev) => [...prev, ...data.results]);
         setHasMore(Boolean(data.next));
       } else {
         setHasMore(false);
@@ -66,24 +69,36 @@ const AllGamesPage = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollBottom =
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 200;
-
-      if (scrollBottom && !loading && hasMore) {
-        setPage((prev) => prev + 1);
+      const bottomReached =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
+      if (bottomReached && !loading && hasMore) {
+        setPage((p) => p + 1);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
+
+  // 在渲染前进行筛选 & 排序
+  let displayed = [...games];
+  if (platformFilter) {
+    displayed = displayed.filter((g) =>
+      g.parent_platforms?.some((p) =>
+        p.platform.name.toLowerCase().includes(platformFilter.toLowerCase())
+      )
+    );
+  }
+  if (sortOrder === "newest") {
+    displayed.sort((a, b) => new Date(b.released) - new Date(a.released));
+  } else if (sortOrder === "oldest") {
+    displayed.sort((a, b) => new Date(a.released) - new Date(b.released));
+  }
 
   return (
     <div className="home-page">
       <Container fluid className="mt-4 px-4">
         {/* Title */}
-        <div className="d-flex align-items-center justify-content-center bg-dark py-3 mb-4 border-bottom border-light">
+        <div className="d-flex align-items-center justify-content-center bg-dark py-3 mb-3 border-bottom border-light">
           <Joystick className="me-2" size={24} color="white" />
           <h2
             className="fw-semibold text-capitalize m-0"
@@ -93,9 +108,35 @@ const AllGamesPage = () => {
           </h2>
         </div>
 
+        {/* Sort & Filter Controls */}
+        <div className="d-flex gap-3 justify-content-end mb-4">
+          <select
+            className="form-select bg-dark text-white border-light"
+            style={{ width: "180px" }}
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="">Release date</option>
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+
+          <select
+            className="form-select bg-dark text-white border-light"
+            style={{ width: "180px" }}
+            value={platformFilter}
+            onChange={(e) => setPlatformFilter(e.target.value)}
+          >
+            <option value="">Platforms</option>
+            <option value="pc">PC</option>
+            <option value="playstation">PlayStation</option>
+            <option value="xbox">Xbox</option>
+          </select>
+        </div>
+
         {/* Gamecard display */}
         <div className="game-container">
-          {games.map((game) => (
+          {displayed.map((game) => (
             <GameCardNoButtons
               key={game.id}
               game={{
@@ -119,6 +160,7 @@ const AllGamesPage = () => {
         )}
       </Container>
 
+      {/* Game Info Modal */}
       <GameInfo
         show={showInfoModal}
         handleClose={() => setShowInfoModal(false)}
