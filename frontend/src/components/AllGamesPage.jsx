@@ -14,7 +14,6 @@ const AllGamesPage = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
-  // 新增：排序 & 平台筛选状态
   const [sortOrder, setSortOrder] = useState("");
   const [platformFilter, setPlatformFilter] = useState("");
 
@@ -79,7 +78,6 @@ const AllGamesPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
 
-  // 在渲染前进行筛选 & 排序
   let displayed = [...games];
   if (platformFilter) {
     displayed = displayed.filter((g) =>
