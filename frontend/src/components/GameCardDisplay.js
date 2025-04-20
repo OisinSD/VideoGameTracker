@@ -83,7 +83,8 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
     }
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = (game) => {
+    setGameBeingEdited(game);
     setShowEditModal(true);
   };
 
@@ -158,11 +159,6 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
         show={showModal}
         handleClose={() => setShowModal(false)}
         game={selectedGame}
-        handleDelete={handleDeleteGame}
-        onEdit={() => {
-          setGameBeingEdited(selectedGame);
-          handleEditClick();
-        }}
       />
       <EditGameModal
         show={showEditModal}

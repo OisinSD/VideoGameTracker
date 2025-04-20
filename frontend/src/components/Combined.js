@@ -79,28 +79,7 @@ export default function Combined({
             <Form.Group className="mb-3">
               <h6>Hours Played ⏳: {game.hoursPlayed || "Not logged"}</h6>
             </Form.Group>
-            {/* Edit Button*/}
-            <Button
-                variant="warning"
-                size="sm"
-                onClick={onEdit}
-                style={{ marginTop: "15px" }}
-            >
-              Edit Game
-            </Button>
 
-            {/* Delete Button */}
-            <Button
-                variant="danger"
-                size="sm"
-                onClick={() => {
-                  handleDelete(game);
-                  handleClose();
-                }}
-                style={{ marginTop: "15px", marginLeft: "auto" }}
-            >
-              Delete Game
-            </Button>
           </Modal.Body>
         </Form>
       </Modal>
