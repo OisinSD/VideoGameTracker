@@ -14,6 +14,7 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
   const [gameBeingEdited, setGameBeingEdited] = useState(null);
   const [refreshGames, setRefreshGames] = useState(false);
   const [deletedCardId, setDeletedCardId] = useState(null);
+  const [fullCombined, setFullCombined] = useState([]);
 
   const handleCloseAllModals = () => {
     setShowEditModal(false);
@@ -43,7 +44,25 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
   const playingGames = games.filter((game) => game.currentlyPlaying);
   const libraryGames = games.filter((game) => !game.currentlyPlaying);
 
-  const handleCardClick = (game) => {
+
+
+
+
+
+  const handleCardClick = async (game) => {
+
+    const API_KEY = "e784bf5f8e30437686ea67247443042d";
+    try{
+      console.log("gameid: ", game.gameID);
+      const combinedData = await fetch(`https://api.rawg.io/api/games/${game.gameID}?key=${API_KEY}`);
+      if(!combinedData.ok) throw new Error("Failed to fetch game details");
+      const fullCombinedData = await combinedData.json();
+      setFullCombined(fullCombinedData);
+      console.log("test", fullCombinedData);
+    }catch(error){
+      console.error("Error fetching full data details: ", error);
+    }
+
     if (deletedCardId === game.title) return;
     setSelectedGame(game);
     setShowModal(true);
@@ -214,6 +233,7 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
             show={showModal}
             handleClose={() => setShowModal(false)}
             game={selectedGame}
+            fulldata={fullCombined}
         />
         <EditGameModal
             show={showEditModal}
