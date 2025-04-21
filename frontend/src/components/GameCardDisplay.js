@@ -1,12 +1,9 @@
 import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../authentication/firebaseConfig";
 import React, { useEffect, useState } from "react";
 import GameCard from "./GameCard";
-import Combined from "../components/Combined";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import { updateDoc } from "firebase/firestore";
+import Combined from "./Combined";
 import EditGameModal from "./EditGameModal";
 
 const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
@@ -16,6 +13,8 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [gameBeingEdited, setGameBeingEdited] = useState(null);
   const [refreshGames, setRefreshGames] = useState(false);
+  const [deletedCardId, setDeletedCardId] = useState(null);
+
   const handleCloseAllModals = () => {
     setShowEditModal(false);
     setShowModal(false);
@@ -25,10 +24,7 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
     const fetchUserGames = async () => {
       const auth = getAuth();
       const user = auth.currentUser;
-      if (!user) {
-        console.log("No user is logged in.");
-        return;
-      }
+      if (!user) return;
 
       const userGamesRef = doc(db, "userGames", user.uid);
       const docSnap = await getDoc(userGamesRef);
@@ -37,7 +33,6 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
         const userGames = docSnap.data().games || [];
         setGames(userGames);
       } else {
-        console.log("No games found for this user.");
         setGames([]);
       }
     };
@@ -49,15 +44,13 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
   const libraryGames = games.filter((game) => !game.currentlyPlaying);
 
   const handleCardClick = (game) => {
+    if (deletedCardId === game.title) return;
     setSelectedGame(game);
     setShowModal(true);
   };
 
   const handleDeleteGame = async (gameToDelete) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${gameToDelete.title}"?`
-    );
-    if (!confirmed) return;
+    setDeletedCardId(gameToDelete.title);
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -65,37 +58,37 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
 
     const userGamesRef = doc(db, "userGames", user.uid);
     const userProfilRef = doc(db, "userProfil", user.uid);
+
     const updatedGames = games.filter(
-      (game) =>
-        !(
-          game.title === gameToDelete.title &&
-          game.category === gameToDelete.category &&
-          game.rating === gameToDelete.rating
-        )
+        (game) =>
+            !(
+                game.title === gameToDelete.title &&
+                game.category === gameToDelete.category &&
+                game.rating === gameToDelete.rating
+            )
     );
 
     try {
-      await updateDoc(userGamesRef, {
-        games: updatedGames,
-      });
+      await updateDoc(userGamesRef, { games: updatedGames });
+
       const profileSnap = await getDoc(userProfilRef);
       if (profileSnap.exists()) {
         const profileData = profileSnap.data();
 
         const updatedGamesPlayed = Math.max(
-          (profileData.gamesPlayed || 1) - 1,
-          0
+            (profileData.gamesPlayed || 1) - 1,
+            0
         );
         const updatedTotalAchievements = Math.max(
-          (profileData.totalAchievements || 0) -
+            (profileData.totalAchievements || 0) -
             (gameToDelete.trophiesUnlocked || 0),
-          0
+            0
         );
 
         const maxTrophies = 100 * updatedGamesPlayed;
         const updatedAchievementCompletion = maxTrophies
-          ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
-          : 0;
+            ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
+            : 0;
 
         await updateDoc(userProfilRef, {
           gamesPlayed: updatedGamesPlayed,
@@ -104,7 +97,10 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
         });
       }
 
-      setGames(updatedGames);
+      setTimeout(() => {
+        setGames(updatedGames);
+        setDeletedCardId(null);
+      }, 1500);
     } catch (error) {
       console.error("Failed to delete game:", error);
     }
@@ -124,40 +120,37 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
     const userProfilRef = doc(db, "userProfil", user.uid);
 
     const originalGame = games.find(
-      (g) =>
-        g.title === updatedGame.title && g.category === updatedGame.category
+        (g) =>
+            g.title === updatedGame.title && g.category === updatedGame.category
     );
 
     const updatedGames = games.map((g) =>
-      g.title === updatedGame.title && g.category === updatedGame.category
-        ? updatedGame
-        : g
+        g.title === updatedGame.title && g.category === updatedGame.category
+            ? updatedGame
+            : g
     );
 
     try {
-      await updateDoc(userGamesRef, {
-        games: updatedGames,
-      });
+      await updateDoc(userGamesRef, { games: updatedGames });
 
       if (
-        originalGame &&
-        originalGame.trophiesUnlocked !== updatedGame.trophiesUnlocked
+          originalGame &&
+          originalGame.trophiesUnlocked !== updatedGame.trophiesUnlocked
       ) {
         const profileSnap = await getDoc(userProfilRef);
         if (profileSnap.exists()) {
           const profileData = profileSnap.data();
           const oldTrophies = originalGame.trophiesUnlocked || 0;
           const newTrophies = updatedGame.trophiesUnlocked || 0;
-
           const diff = newTrophies - oldTrophies;
+
           const updatedTotalAchievements =
-            (profileData.totalAchievements || 0) + diff;
+              (profileData.totalAchievements || 0) + diff;
           const gamesPlayed = profileData.gamesPlayed || updatedGames.length;
           const maxTrophies = 100 * gamesPlayed;
-
           const updatedAchievementCompletion = maxTrophies
-            ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
-            : 0;
+              ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
+              : 0;
 
           await updateDoc(userProfilRef, {
             totalAchievements: updatedTotalAchievements,
@@ -166,7 +159,7 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
         }
       }
 
-      setGames(updatedGames); // UI update
+      setGames(updatedGames);
       setSelectedGame(updatedGame);
     } catch (error) {
       console.error("Failed to update game:", error);
@@ -174,62 +167,62 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
   };
 
   return (
-    <>
-      <section className="game-section">
-        <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom mt-4">
-          <h2
-            className="fw-semibold text-capitalize m-0"
-            style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}
-          >
-            <i
-              className={`bi ${
-                viewSection === "playing"
-                  ? "bi-hourglass-split"
-                  : "bi-controller"
-              } me-2`}
-            ></i>
-            {viewSection === "playing" ? "Currently Playing" : "Library"}
-          </h2>
-        </div>
+      <>
+        <section className="game-section">
+          <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom mt-4">
+            <h2
+                className="fw-semibold text-capitalize m-0"
+                style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}
+            >
+              <i
+                  className={`bi ${
+                      viewSection === "playing"
+                          ? "bi-hourglass-split"
+                          : "bi-controller"
+                  } me-2`}
+              ></i>
+              {viewSection === "playing" ? "Currently Playing" : "Library"}
+            </h2>
+          </div>
 
-        <div className="game-container">
-          {(viewSection === "playing" ? playingGames : libraryGames).length >
-          0 ? (
-            (viewSection === "playing" ? playingGames : libraryGames).map(
-              (game, index) => (
-                <GameCard
-                  key={index}
-                  game={game}
-                  onClick={() => handleCardClick(game)}
-                  onDelete={handleDeleteGame}
-                  onEdit={handleEditClick}
-                />
-              )
-            )
-          ) : (
-            <p className="text-light text-center">
-              {viewSection === "playing"
-                ? "No games currently being played."
-                : "No games finished yet."}
-            </p>
-          )}
-        </div>
-      </section>
+          <div className="game-container">
+            {(viewSection === "playing" ? playingGames : libraryGames).length >
+            0 ? (
+                (viewSection === "playing" ? playingGames : libraryGames).map(
+                    (game, index) => (
+                        <GameCard
+                            key={index}
+                            game={game}
+                            isDeleted={deletedCardId === game.title}
+                            onClick={() => handleCardClick(game)}
+                            onDelete={handleDeleteGame}
+                            onEdit={handleEditClick}
+                        />
+                    )
+                )
+            ) : (
+                <p className="text-light text-center">
+                  {viewSection === "playing"
+                      ? "No games currently being played."
+                      : "No games finished yet."}
+                </p>
+            )}
+          </div>
+        </section>
 
-      {/* Modal for Game Info */}
-      <Combined
-        show={showModal}
-        handleClose={() => setShowModal(false)}
-        game={selectedGame}
-      />
-      <EditGameModal
-        show={showEditModal}
-        handleClose={handleCloseAllModals}
-        game={gameBeingEdited}
-        onSave={handleSaveEditedGame}
-        setRefreshGames={setRefreshGames}
-      />
-    </>
+        <Combined
+            show={showModal}
+            handleClose={() => setShowModal(false)}
+            game={selectedGame}
+        />
+        <EditGameModal
+            show={showEditModal}
+            handleClose={handleCloseAllModals}
+            game={gameBeingEdited}
+            onSave={handleSaveEditedGame}
+            setRefreshGames={setRefreshGames}
+        />
+      </>
   );
 };
 

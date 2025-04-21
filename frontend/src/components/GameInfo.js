@@ -5,44 +5,42 @@ import { db } from "../authentication/firebaseConfig";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 export default function GameInfo({
-  show,
-  handleClose,
-  handleAddData,
-  triggerAddGame,
-  game,
-  setRefreshGames,
-}) {
+                                   show,
+                                   handleClose,
+                                   handleAddData,
+                                   triggerAddGame,
+                                   game,
+                                   setRefreshGames,
+                                 }) {
   const [review, setReview] = useState("");
   const [hoursPlayed, setHoursPlayed] = useState("");
   const [rating, setRating] = useState(0);
   const [addedToPlaying, setAddedToPlaying] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
 
+  useEffect(() => {
+    const checkIfGameAdded = async () => {
+      setAddedToPlaying(false);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user || !game) return;
 
-//this checks Database to see if modal game is already in playing games (for green added button) 
-useEffect(() => {
-  const checkIfGameAdded = async () => {
-    setAddedToPlaying(false);
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user || !game) return;
+      const userGameRef = doc(db, "userGames", user.uid);
+      const docSnap = await getDoc(userGameRef);
 
-    const userGameRef = doc(db, "userGames", user.uid);
-    const docSnap = await getDoc(userGameRef);
-
-    if (docSnap.exists()) {
-      const existingGames = docSnap.data().games || [];
-      const alreadyExists = existingGames.some(
-        (existingGame) => existingGame.title === game.name
-      );
-      if (alreadyExists) {
-        setAddedToPlaying(true);
+      if (docSnap.exists()) {
+        const existingGames = docSnap.data().games || [];
+        const alreadyExists = existingGames.some(
+            (existingGame) => existingGame.title === game.name
+        );
+        if (alreadyExists) {
+          setAddedToPlaying(true);
+        }
       }
-    }
-  };
+    };
 
-  checkIfGameAdded();
-}, [game]);
+    checkIfGameAdded();
+  }, [game]);
 
   if (!game) return null;
 
@@ -53,12 +51,12 @@ useEffect(() => {
   };
 
   const cleanedDescription = game.description
-    ? removeHTML(game.description)
-    : "No description available.";
+      ? removeHTML(game.description)
+      : "No description available.";
   const shortDescription =
-    cleanedDescription.length > 500
-      ? cleanedDescription.slice(0, 500) + "... "
-      : cleanedDescription;
+      cleanedDescription.length > 500
+          ? cleanedDescription.slice(0, 500) + "... "
+          : cleanedDescription;
 
   const handleAddToPlaying = async () => {
     const auth = getAuth();
@@ -87,11 +85,10 @@ useEffect(() => {
         existingGames = docSnap.data().games || [];
 
         const alreadyExists = existingGames.some(
-          (existingGame) => existingGame.title === gameData.title
+            (existingGame) => existingGame.title === gameData.title
         );
 
         if (alreadyExists) {
-          alert("You've already added this game.");
           return;
         }
       }
@@ -114,7 +111,7 @@ useEffect(() => {
 
       const maxTrophies = 100 * newGamesPlayed;
       const achievementCompletion = Math.round(
-        (newTotalAchievements / maxTrophies) * 100
+          (newTotalAchievements / maxTrophies) * 100
       );
 
       await setDoc(userProfilRef, {
@@ -125,131 +122,148 @@ useEffect(() => {
 
       setAddedToPlaying(true);
       setRefreshGames((prev) => !prev);
-      alert("Game added to Currently Playing!");
     } catch (error) {
       console.error("Error adding game:", error);
-      alert("Something went wrong.");
     }
   };
 
-
   return (
-    <Modal show={show} onHide={handleClose} centered>
-      <style>
-        {`
+      <Modal show={show} onHide={handleClose} centered>
+        <style>
+          {`
           .btn-close {
             filter: invert(1); 
           }
         `}
-      </style>
+        </style>
 
-      <Form>
-        <Modal.Header closeButton className="bg-dark text-light">
-          <div className="d-flex align-items-center gap-3">
-            <img
-              src={game.background_image}
-              alt="Game Thumbnail"
-              className="img-fluid rounded"
-              style={{ width: "100px", height: "150px", objectFit: "cover" }}
-            />
-            <div className="d-flex flex-column text-center">
-              <h2 className="fw-bold m-0">{game.name}</h2>
-              <h6 className="text-secondary">
-                Publisher:{" "}
-                {game.publishers
-                  ? game.publishers.map((p) => p.name).join(", ")
-                  : "Unknown"}
-              </h6>
-              <h6 className="text-secondary">
-                Genre:{" "}
-                {game.genres
-                  ? game.genres.map((g) => g.name).join(", ")
-                  : "Unknown"}
-              </h6>
-              <h6 className="text-secondary">
-                Platform:{" "}
-                {game.parent_platforms
-                  ? game.parent_platforms
-                      .map((pp) => pp.platform.name)
-                      .join(", ")
-                  : "Unknown"}
-              </h6>
-              <h6 className="text-secondary">Release Date: {game.released}</h6>
+        <Form>
+          <Modal.Header closeButton className="bg-dark text-light">
+            <div className="d-flex align-items-center gap-3">
+              <img
+                  src={game.background_image}
+                  alt="Game Thumbnail"
+                  className="img-fluid rounded"
+                  style={{ width: "100px", height: "150px", objectFit: "cover" }}
+              />
+              <div className="d-flex flex-column text-center">
+                <h2 className="fw-bold m-0">{game.name}</h2>
+                <h6 className="text-secondary">
+                  Publisher:{" "}
+                  {game.publishers
+                      ? game.publishers.map((p) => p.name).join(", ")
+                      : "Unknown"}
+                </h6>
+                <h6 className="text-secondary">
+                  Genre:{" "}
+                  {game.genres
+                      ? game.genres.map((g) => g.name).join(", ")
+                      : "Unknown"}
+                </h6>
+                <h6 className="text-secondary">
+                  Platform:{" "}
+                  {game.parent_platforms
+                      ? game.parent_platforms
+                          .map((pp) => pp.platform.name)
+                          .join(", ")
+                      : "Unknown"}
+                </h6>
+                <h6 className="text-secondary">Release Date: {game.released}</h6>
+              </div>
             </div>
-          </div>
-        </Modal.Header>
+          </Modal.Header>
 
-        <Modal.Body className="bg-dark text-light">
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="review">Game Summary</Form.Label>
-            <p>
-              {showFullDescription ? cleanedDescription : shortDescription}
-              {cleanedDescription.length > 500 && (
-                <Button
-                  variant="link"
-                  className="p-0 text-secondary"
-                  onClick={() => setShowFullDescription(!showFullDescription)}
-                >
-                  {showFullDescription ? "Show Less" : "Read More"}
-                </Button>
-              )}
-            </p>
-          </Form.Group>
+          <Modal.Body className="bg-dark text-light">
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="review">Game Summary</Form.Label>
+              <p>
+                {showFullDescription ? cleanedDescription : shortDescription}
+                {cleanedDescription.length > 500 && (
+                    <Button
+                        variant="link"
+                        className="p-0 text-secondary"
+                        onClick={() => setShowFullDescription(!showFullDescription)}
+                    >
+                      {showFullDescription ? "Show Less" : "Read More"}
+                    </Button>
+                )}
+              </p>
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <h6>Number of Trophies 🏆: {game.parent_achievements_count}</h6>
-          </Form.Group>
+            <Form.Group className="mb-3">
+              <h6>Number of Trophies 🏆: {game.parent_achievements_count}</h6>
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <h6>
-              Metacritic Score 📈: {game.metacritic ? game.metacritic : "N/A"}
-            </h6>
-          </Form.Group>
+            <Form.Group className="mb-3">
+              <h6>
+                Metacritic Score 📈: {game.metacritic ? game.metacritic : "N/A"}
+              </h6>
+            </Form.Group>
 
-          <div className="d-flex justify-content-between gap-3">
-            <Button
-              type="button"
-              className="btn btn-lg w-100 d-flex justify-content-center align-items-center gap-2"
-              style={{
-                background: addedToPlaying
-                  ? "linear-gradient(90deg, #28a745, #28a745)"
-                  : "linear-gradient(90deg, #7f57f5, #e157f5)",
-                border: "none",
-              }}
-              onClick={handleAddToPlaying}
-              disabled={addedToPlaying}
-            >
-              {addedToPlaying ? (
-                <>
-                  <span className="text-white fw-bold">Added</span>
-                  <span className="fs-5">✅</span>
-                </>
-              ) : (
-                "Add to Playing"
-              )}
-            </Button>
+            <div className="d-flex justify-content-between gap-3">
+              <Button
+                  type="button"
+                  className="btn btn-lg w-100 d-flex justify-content-center align-items-center gap-2"
+                  style={{
+                    background: addedToPlaying
+                        ? "linear-gradient(90deg, #28a745, #28a745)"
+                        : "linear-gradient(90deg, #7f57f5, #e157f5)",
+                    border: "none",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!addedToPlaying)
+                      e.currentTarget.style.background =
+                          "linear-gradient(90deg, #9357f5, #f157f5)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!addedToPlaying)
+                      e.currentTarget.style.background =
+                          "linear-gradient(90deg, #7f57f5, #e157f5)";
+                  }}
+                  onClick={handleAddToPlaying}
+                  disabled={addedToPlaying}
+              >
+                {addedToPlaying ? (
+                    <>
+                      <span className="text-white fw-bold">Added</span>
+                      <span className="fs-5">✅</span>
+                    </>
+                ) : (
+                    "Add to Playing"
+                )}
+              </Button>
 
-            <Button
-              type="button"
-              className="btn btn-lg w-100"
-              style={{
-                background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                border: "none",
-              }}
-              onClick={() => {
-                triggerAddGame({
-                  review,
-                  rating,
-                  hoursPlayed,
-                  trophiesUnlocked: game.parent_achievements_count || 0,
-                });
-              }}
-            >
-              Add to Library
-            </Button>
-          </div>
-        </Modal.Body>
-      </Form>
-    </Modal>
+              <Button
+                  type="button"
+                  className="btn btn-lg w-100"
+                  style={{
+                    background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                    border: "none",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background =
+                        "linear-gradient(90deg, #9357f5, #f157f5)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background =
+                        "linear-gradient(90deg, #7f57f5, #e157f5)";
+                  }}
+                  onClick={() => {
+                    triggerAddGame({
+                      review,
+                      rating,
+                      hoursPlayed,
+                      trophiesUnlocked: game.parent_achievements_count || 0,
+                    });
+                  }}
+              >
+                Add to Library
+              </Button>
+            </div>
+          </Modal.Body>
+        </Form>
+      </Modal>
   );
 }
