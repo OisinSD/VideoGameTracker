@@ -72,16 +72,7 @@ const SignUpForm = () => {
       });
 
       navigate("/signin");
-      //NOTE:Remove localStorage on user's information
-      // const users = JSON.parse(localStorage.getItem("users")) || [];
-      // if (users.find((user) => user.username === username)) {
-      //   setErrors({ username: ["Username already exists."] });
-      //   return;
-      // }
 
-      // users.push({ username, password: password1 });
-      // localStorage.setItem("users", JSON.stringify(users));
-      // navigate("/signin");
     } catch (err) {
       setErrors({ general: err.message });
     }
