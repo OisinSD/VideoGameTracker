@@ -181,7 +181,7 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
                           : "bi-controller"
                   } me-2`}
               ></i>
-              {viewSection === "playing" ? "Currently Playing" : "Library"}
+              {viewSection === "playing" ? "Currently Playing" : "Finsihed Games"}
             </h2>
           </div>
 

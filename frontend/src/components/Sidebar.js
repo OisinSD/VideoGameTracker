@@ -35,7 +35,7 @@ const Sidebar = forwardRef(({ onLogout, onSelectSection }, ref) => {
               onClick={() => onSelectSection("library")}
           >
               <CollectionPlay className="icon"/>
-              <span>Library</span>
+              <span>Finished Games</span>
           </button>
 
           <button
