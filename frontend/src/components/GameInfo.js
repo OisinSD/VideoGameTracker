@@ -26,7 +26,7 @@ useEffect(() => {
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user || !game) return;
-
+    console.log("game info....", game) 
     const userGameRef = doc(db, "userGames", user.uid);
     const docSnap = await getDoc(userGameRef);
 

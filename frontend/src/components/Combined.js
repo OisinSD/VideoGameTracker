@@ -21,6 +21,17 @@ export default function Combined({
     // Optional: save logic
   }
 
+
+
+
+console.log("game info:..", game);
+
+
+
+
+
+
+
   return (
       <Modal show={show} onHide={handleClose} centered>
         <style>
