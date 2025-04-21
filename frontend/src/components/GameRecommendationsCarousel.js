@@ -20,8 +20,10 @@ const GameRecommendationsCarousel = () => {
         const fetchRecommendations = async () => {
             try {
                 const response = await fetch(
-                    `https://api.rawg.io/api/games?key=${API_KEY}&ordering=-rating&page_size=10`
+                    `https://api.rawg.io/api/games?key=${API_KEY}&ordering=-added&dates=2025-01-01,2025-12-31&page_size=10`
                 );
+
+
                 if (!response.ok) throw new Error("Failed to fetch recommendations");
 
                 const data = await response.json();

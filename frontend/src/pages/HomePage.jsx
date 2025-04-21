@@ -15,10 +15,10 @@ import GameRecommendationsCarousel from "../components/GameRecommendationsCarous
 import PixelRunner from "../components/PixelRunner";
 import Sidebar from "../components/Sidebar";
 import AllGamesPage from "../components/AllGamesPage";
+import { motion, AnimatePresence } from "framer-motion";
 
 const HomePage = () => {
   const [results, setResults] = useState([]);
-  const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
   const [addGameData, setAddGameData] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -27,17 +27,14 @@ const HomePage = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const sidebarRef = useRef(null);
+  const [toastMessage, setToastMessage] = useState("");
 
-  const triggerGameInfo = (game) => {
-    setSelectedGame(game);
-    setShowInfoModal(true);
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(""), 3000);
   };
 
-  function handleAddData(data) {
-    console.log("New Data:", data);
-  }
-
-  const handleGameSelectFromSearch = (game) => {
+  const triggerGameInfo = (game) => {
     setSelectedGame(game);
     setShowInfoModal(true);
   };
@@ -52,155 +49,125 @@ const HomePage = () => {
     signOut(auth);
   };
 
-  const handleToggleSidebar = () => {
-    setSidebarVisible((prevVisible) => {
-      const newVisible = !prevVisible;
-      if (!prevVisible) {
-        setTimeout(() => {
-          if (sidebarRef.current) {
-            const sidebarTop =
-              sidebarRef.current.getBoundingClientRect().top + window.scrollY;
-            window.scrollTo({
-              top: sidebarTop - 20,
-              behavior: "smooth",
-            });
-          }
-        }, 100);
-      }
-      return newVisible;
-    });
-  };
-
   return (
-    <div className="home-page">
-      {/* Banner and search bar */}
-      <header className="position-relative">
-        <div className="banner-wrapper">
-          <div className="banner">
-            {/* Sidebar toggle */}
-            <div className="position-absolute top-0 start-0 m-3">
-              <Button
-                variant="light"
-                onClick={handleToggleSidebar}
-                style={{
-                  opacity: 0.7,
-                  backgroundColor: "white",
-                  border: "none",
-                }}
-              >
-                <List size={30} />
-              </Button>
-            </div>
-
-            {/* Profile button - hide for now
-            <div className="position-absolute top-0 end-0 m-3">
-              <button
-                onClick={() => setShowProfileModal(true)}
-                className="btn btn-lg"
-                style={{
-                  background: "linear-gradient(90deg, #7f57f5, #e157f5)",
-                  border: "none",
-                }}
-              >
-                Profile
-              </button>
-            </div> */}
-
-            {/* ⬇️ Add PixelRunner here */}
-            <PixelRunner />
-
-            {/* Search bar only*/}
-            <div className="search-bar-container">
-              <NewSearchBar
-                setResults={setResults}
-                results={results}
-                triggerGameInfo={handleGameSelectFromSearch}
-              />
-              <SearchResults
-                results={results}
-                onSelectGame={handleGameSelectFromSearch}
-              />
+      <div className="home-page">
+        <header className="position-relative">
+          <div className="banner-wrapper">
+            <div className="banner">
+              <div className="position-absolute top-0 start-0 m-3">
+                <Button
+                    variant="light"
+                    onClick={() => setSidebarVisible((v) => !v)}
+                    style={{ opacity: 0.7, backgroundColor: "white", border: "none" }}
+                >
+                  <List size={30} />
+                </Button>
+              </div>
+              <PixelRunner />
+              <div className="search-bar-container">
+                <NewSearchBar
+                    setResults={setResults}
+                    results={results}
+                    triggerGameInfo={triggerGameInfo}
+                />
+                <SearchResults
+                    results={results}
+                    onSelectGame={triggerGameInfo}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Sidebar and main content */}
-      {sidebarVisible && (
-        <Sidebar
-          ref={sidebarRef}
-          onLogout={handleLogout}
-          onSelectSection={setActiveSection}
+        {sidebarVisible && (
+            <Sidebar
+                ref={sidebarRef}
+                onLogout={handleLogout}
+                onSelectSection={setActiveSection}
+            />
+        )}
+
+        <AnimatePresence mode="wait">
+          <motion.div
+              key={activeSection}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                marginLeft: sidebarVisible ? "220px" : "0px",
+                transition: "margin-left 0.3s ease",
+                padding: "20px",
+              }}
+          >
+            {activeSection === "home" && (
+                <>
+                  <GameRecommendationsCarousel />
+                  <GameCardDisplay
+                      refreshTrigger={refreshGames}
+                      viewSection="playing"
+                      showToast={showToast}
+                  />
+                  <GameCardDisplay
+                      refreshTrigger={refreshGames}
+                      viewSection="library"
+                      showToast={showToast}
+                  />
+                </>
+            )}
+            {activeSection === "playing" && (
+                <GameCardDisplay
+                    refreshTrigger={refreshGames}
+                    viewSection="playing"
+                    showToast={showToast}
+                />
+            )}
+            {activeSection === "library" && (
+                <GameCardDisplay
+                    refreshTrigger={refreshGames}
+                    viewSection="library"
+                    showToast={showToast}
+                />
+            )}
+            {activeSection === "allGames" && <AllGamesPage />}
+          </motion.div>
+        </AnimatePresence>
+
+        <AddGame
+            show={showAddModal}
+            handleClose={() => setShowAddModal(false)}
+            game={selectedGame}
+            extraData={addGameData}
+            setRefreshGames={setRefreshGames}
         />
-      )}
+        <GameInfo
+            show={showInfoModal}
+            handleClose={() => setShowInfoModal(false)}
+            triggerAddGame={triggerAddGame}
+            game={selectedGame}
+            setRefreshGames={setRefreshGames}
+        />
 
-      <div
-        style={{
-          marginLeft: sidebarVisible ? "220px" : "0px",
-          transition: "margin-left 0.3s ease",
-          padding: "20px",
-        }}
-      >
-        {activeSection === "home" && (
-          <>
-            <GameRecommendationsCarousel />
-            <GameCardDisplay
-              refreshTrigger={refreshGames}
-              viewSection="playing"
-            />
-            <GameCardDisplay
-              refreshTrigger={refreshGames}
-              viewSection="library"
-            />
-          </>
+        {toastMessage && (
+            <div
+                style={{
+                  position: "fixed",
+                  bottom: "20px",
+                  right: "20px",
+                  backgroundColor: "#28a745",
+                  color: "white",
+                  padding: "12px 20px",
+                  borderRadius: "8px",
+                  boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+                  zIndex: 9999,
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                }}
+            >
+              {toastMessage}
+            </div>
         )}
-        {activeSection === "playing" && (
-          <GameCardDisplay
-            refreshTrigger={refreshGames}
-            viewSection="playing"
-          />
-        )}
-        {activeSection === "library" && (
-          <GameCardDisplay
-            refreshTrigger={refreshGames}
-            viewSection="library"
-          />
-        )}
-        {activeSection === "allGames" && <AllGamesPage />}
       </div>
-
-      {/* Modals */}
-      {activeSection === "profile" && (
-        <div
-          style={{
-            marginLeft: sidebarVisible ? "220px" : "0px",
-            transition: "margin-left 0.3s ease",
-            padding: "20px",
-          }}
-        >
-          <ProfilePage
-            refreshTrigger={refreshGames}
-            onBack={() => setActiveSection("home")}
-          />
-        </div>
-      )}
-      <AddGame
-        show={showAddModal}
-        handleClose={() => setShowAddModal(false)}
-        handleAddData={handleAddData}
-        game={selectedGame}
-        extraData={addGameData}
-        setRefreshGames={setRefreshGames}
-      />
-      <GameInfo
-        show={showInfoModal}
-        handleClose={() => setShowInfoModal(false)}
-        handleAddData={handleAddData}
-        triggerAddGame={triggerAddGame}
-        game={selectedGame}
-        setRefreshGames={setRefreshGames}
-      />
-    </div>
   );
 };
 

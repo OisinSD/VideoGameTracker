@@ -25,22 +25,7 @@ const SignInForm = ({ onLogin }) => {
       onLogin(true);
       //NOTE: Redirect to landing page
       navigate("/");
-      // const users = JSON.parse(localStorage.getItem("users")) || [];
-      // const user = users.find((user) => user.username === username);
 
-      // if (!user) {
-      //   setErrors({ username: ["User does not exist."] });
-      //   return;
-      // }
-
-      // if (user.password !== password) {
-      //   setErrors({ password: ["Incorrect password."] });
-      //   return;
-      // }
-
-      // localStorage.setItem("loggedIn", true);
-      // onLogin(true);
-      // navigate("/");
     } catch (err) {
       setErrors({ general: err.message });
     }
@@ -103,19 +88,7 @@ const SignInForm = ({ onLogin }) => {
             ))}
           </Form.Group>
 
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <Form.Check
-              type="checkbox"
-              label="Remember Me"
-              className="text-secondary small"
-            />
-            <Link
-              to="/forgot-password"
-              className="text-decoration-none text-light small"
-            >
-              Forgot Password?
-            </Link>
-          </div>
+
 
           <Button
             type="submit"
