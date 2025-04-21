@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import { StarFill, Star } from "react-bootstrap-icons";
-import witcherThumbnail from "../assets/images/witcher-thumbnail.webp";
+import { getAuth } from "firebase/auth";
 import { db } from "../authentication/firebaseConfig";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import witcherThumbnail from "../assets/images/witcher-thumbnail.webp";
 
 export default function EditGameModal({
                                           show,
@@ -16,6 +16,7 @@ export default function EditGameModal({
     const [hoursPlayed, setHoursPlayed] = useState("");
     const [rating, setRating] = useState(0);
     const [trophiesUnlocked, setTrophiesUnlocked] = useState("");
+    const [buttonConfirmed, setButtonConfirmed] = useState(false);
 
     useEffect(() => {
         if (game) {
@@ -26,49 +27,42 @@ export default function EditGameModal({
         }
     }, [game]);
 
-    async function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const auth = getAuth();
         const user = auth.currentUser;
-        if (!user) {
-            alert("You must be logged in to edit games.");
-            return;
-        }
+        if (!user) return;
 
         const userGameRef = doc(db, "userGames", user.uid);
         const docSnap = await getDoc(userGameRef);
+        const games = docSnap.data().games;
 
-        if (docSnap.exists()) {
-            let games = docSnap.data().games || [];
+        const index = games.findIndex((g) => g.title === game.title);
+        games[index] = {
+            ...games[index],
+            review,
+            hoursPlayed: parseInt(hoursPlayed),
+            rating,
+            trophiesUnlocked: parseInt(trophiesUnlocked),
+        };
 
-            const index = games.findIndex((g) => g.title === game.title);
+        await updateDoc(userGameRef, { games });
 
-            if (index !== -1) {
-                games[index] = {
-                    ...games[index],
-                    review,
-                    hoursPlayed: parseInt(hoursPlayed),
-                    rating,
-                    trophiesUnlocked: parseInt(trophiesUnlocked),
-                };
+        setButtonConfirmed(true);
 
-                await updateDoc(userGameRef, { games });
-                alert("Game updated successfully!");
-                setRefreshGames((prev) => !prev);
-                handleClose();
-            } else {
-                alert("Game not found in your library.");
-            }
-        }
-    }
+        setTimeout(() => {
+            setButtonConfirmed(false);
+            setRefreshGames((prev) => !prev);
+            handleClose();
+        }, 1500);
+    };
 
     if (!game) return null;
 
     return (
         <Modal show={show} onHide={handleClose} centered>
             <style>{`.btn-close { filter: invert(1); }`}</style>
-
             <Form onSubmit={handleSubmit}>
                 <Modal.Header closeButton className="bg-dark text-light">
                     <div className="d-flex align-items-center gap-3">
@@ -158,11 +152,14 @@ export default function EditGameModal({
                             type="submit"
                             className="btn btn-lg w-100"
                             style={{
-                                background: "linear-gradient(90deg, #7f57f5, #e157f5)",
+                                background: buttonConfirmed
+                                    ? "linear-gradient(90deg, #28a745, #57f58b)"
+                                    : "linear-gradient(90deg, #7f57f5, #e157f5)",
                                 border: "none",
                             }}
+                            disabled={buttonConfirmed}
                         >
-                            Save Changes
+                            {buttonConfirmed ? "✔️ Game Updated!" : "Save Changes"}
                         </Button>
                     </div>
                 </Modal.Body>
