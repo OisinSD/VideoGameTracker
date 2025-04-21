@@ -3,6 +3,7 @@ import { Container, Spinner } from "react-bootstrap";
 import { Joystick } from "react-bootstrap-icons";
 import GameCardNoButtons from "./GameCardNoButtons";
 import GameInfo from "./GameInfo";
+import AddGame from "./AddGame";
 import { getAuth } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../authentication/firebaseConfig";
@@ -19,7 +20,7 @@ const AllGamesPage = () => {
 
   const [selectedGame, setSelectedGame] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
-
+  const [showAddGameModal, setShowAddGameModal] = useState(false);
   const [refreshGames, setRefreshGames] = useState(false);
 
   const [sortOrder, setSortOrder] = useState("");
@@ -102,6 +103,11 @@ const AllGamesPage = () => {
   } else if (sortOrder === "oldest") {
     displayed.sort((a, b) => new Date(a.released) - new Date(b.released));
   }
+
+  const triggerAddGame = () => {
+    setShowInfoModal(false);
+    setShowAddGameModal(true);
+  };
 
   const handleAddToLibrary = async ({
     review,
@@ -210,13 +216,26 @@ const AllGamesPage = () => {
       </Container>
 
       {/* Game Info Modal */}
-      <GameInfo
-        show={showInfoModal}
-        handleClose={() => setShowInfoModal(false)}
-        game={selectedGame}
-        setRefreshGames={setRefreshGames}
-        triggerAddGame={handleAddToLibrary}
-      />
+      {selectedGame && (
+          <GameInfo
+              show={showInfoModal}
+              game={selectedGame}
+              handleClose={() => setShowInfoModal(false)}
+              triggerAddGame={triggerAddGame}
+              setRefreshGames={() => {}}
+          />
+      )}
+
+      {/* Add Game Modal */}
+      {selectedGame && showAddGameModal && (
+          <AddGame
+              show={showAddGameModal}
+              game={selectedGame}
+              handleClose={() => setShowAddGameModal(false)}
+              triggerAddGame={handleAddToLibrary}
+              setRefreshGames={() => {}}
+          />
+      )}
     </div>
   );
 };
