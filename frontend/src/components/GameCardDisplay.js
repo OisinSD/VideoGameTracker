@@ -6,7 +6,7 @@ import GameCard from "./GameCard";
 import Combined from "./Combined";
 import EditGameModal from "./EditGameModal";
 
-const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
+const GameCardDisplay = ({ refreshTrigger, viewSection, showToast, limit }) => {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -44,22 +44,18 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
   const playingGames = games.filter((game) => game.currentlyPlaying);
   const libraryGames = games.filter((game) => !game.currentlyPlaying);
 
-
-
-
-
-
   const handleCardClick = async (game) => {
-
     const API_KEY = "e784bf5f8e30437686ea67247443042d";
-    try{
+    try {
       console.log("gameid: ", game.gameID);
-      const combinedData = await fetch(`https://api.rawg.io/api/games/${game.gameID}?key=${API_KEY}`);
-      if(!combinedData.ok) throw new Error("Failed to fetch game details");
+      const combinedData = await fetch(
+        `https://api.rawg.io/api/games/${game.gameID}?key=${API_KEY}`
+      );
+      if (!combinedData.ok) throw new Error("Failed to fetch game details");
       const fullCombinedData = await combinedData.json();
       setFullCombined(fullCombinedData);
       console.log("test", fullCombinedData);
-    }catch(error){
+    } catch (error) {
       console.error("Error fetching full data details: ", error);
     }
 
@@ -79,12 +75,12 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
     const userProfilRef = doc(db, "userProfil", user.uid);
 
     const updatedGames = games.filter(
-        (game) =>
-            !(
-                game.title === gameToDelete.title &&
-                game.category === gameToDelete.category &&
-                game.rating === gameToDelete.rating
-            )
+      (game) =>
+        !(
+          game.title === gameToDelete.title &&
+          game.category === gameToDelete.category &&
+          game.rating === gameToDelete.rating
+        )
     );
 
     try {
@@ -95,19 +91,19 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
         const profileData = profileSnap.data();
 
         const updatedGamesPlayed = Math.max(
-            (profileData.gamesPlayed || 1) - 1,
-            0
+          (profileData.gamesPlayed || 1) - 1,
+          0
         );
         const updatedTotalAchievements = Math.max(
-            (profileData.totalAchievements || 0) -
+          (profileData.totalAchievements || 0) -
             (gameToDelete.trophiesUnlocked || 0),
-            0
+          0
         );
 
         const maxTrophies = 100 * updatedGamesPlayed;
         const updatedAchievementCompletion = maxTrophies
-            ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
-            : 0;
+          ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
+          : 0;
 
         await updateDoc(userProfilRef, {
           gamesPlayed: updatedGamesPlayed,
@@ -139,22 +135,22 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
     const userProfilRef = doc(db, "userProfil", user.uid);
 
     const originalGame = games.find(
-        (g) =>
-            g.title === updatedGame.title && g.category === updatedGame.category
+      (g) =>
+        g.title === updatedGame.title && g.category === updatedGame.category
     );
 
     const updatedGames = games.map((g) =>
-        g.title === updatedGame.title && g.category === updatedGame.category
-            ? updatedGame
-            : g
+      g.title === updatedGame.title && g.category === updatedGame.category
+        ? updatedGame
+        : g
     );
 
     try {
       await updateDoc(userGamesRef, { games: updatedGames });
 
       if (
-          originalGame &&
-          originalGame.trophiesUnlocked !== updatedGame.trophiesUnlocked
+        originalGame &&
+        originalGame.trophiesUnlocked !== updatedGame.trophiesUnlocked
       ) {
         const profileSnap = await getDoc(userProfilRef);
         if (profileSnap.exists()) {
@@ -164,12 +160,12 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
           const diff = newTrophies - oldTrophies;
 
           const updatedTotalAchievements =
-              (profileData.totalAchievements || 0) + diff;
+            (profileData.totalAchievements || 0) + diff;
           const gamesPlayed = profileData.gamesPlayed || updatedGames.length;
           const maxTrophies = 100 * gamesPlayed;
           const updatedAchievementCompletion = maxTrophies
-              ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
-              : 0;
+            ? Math.round((updatedTotalAchievements / maxTrophies) * 100)
+            : 0;
 
           await updateDoc(userProfilRef, {
             totalAchievements: updatedTotalAchievements,
@@ -186,63 +182,63 @@ const GameCardDisplay = ({ refreshTrigger, viewSection }) => {
   };
 
   return (
-      <>
-        <section className="game-section">
-          <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom mt-4">
-            <h2
-                className="fw-semibold text-capitalize m-0"
-                style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}
-            >
-              <i
-                  className={`bi ${
-                      viewSection === "playing"
-                          ? "bi-hourglass-split"
-                          : "bi-controller"
-                  } me-2`}
-              ></i>
-              {viewSection === "playing" ? "Currently Playing" : "Finsihed Games"}
-            </h2>
-          </div>
+    <>
+      <section className="game-section">
+        <div className="bg-dark text-white py-4 text-center shadow-sm border-bottom mt-4">
+          <h2
+            className="fw-semibold text-capitalize m-0"
+            style={{ letterSpacing: "0.5px", fontSize: "1.75rem" }}
+          >
+            <i
+              className={`bi ${
+                viewSection === "playing"
+                  ? "bi-hourglass-split"
+                  : "bi-controller"
+              } me-2`}
+            ></i>
+            {viewSection === "playing" ? "Currently Playing" : "Finsihed Games"}
+          </h2>
+        </div>
 
-          <div className="game-container">
-            {(viewSection === "playing" ? playingGames : libraryGames).length >
-            0 ? (
-                (viewSection === "playing" ? playingGames : libraryGames).map(
-                    (game, index) => (
-                        <GameCard
-                            key={index}
-                            game={game}
-                            isDeleted={deletedCardId === game.title}
-                            onClick={() => handleCardClick(game)}
-                            onDelete={handleDeleteGame}
-                            onEdit={handleEditClick}
-                        />
-                    )
-                )
-            ) : (
-                <p className="text-light text-center">
-                  {viewSection === "playing"
-                      ? "No games currently being played."
-                      : "No games finished yet."}
-                </p>
-            )}
-          </div>
-        </section>
+        <div className="game-container">
+          {(viewSection === "playing" ? playingGames : libraryGames).length >
+          0 ? (
+            (viewSection === "playing" ? playingGames : libraryGames)
+              .slice(0, limit || 999)
+              .map((game, index) => (
+                <GameCard
+                  key={index}
+                  game={game}
+                  isDeleted={deletedCardId === game.title}
+                  onClick={() => handleCardClick(game)}
+                  onDelete={handleDeleteGame}
+                  onEdit={handleEditClick}
+                />
+              ))
+          ) : (
+            <p className="text-light text-center">
+              {viewSection === "playing"
+                ? "No games currently being played."
+                : "No games finished yet."}
+            </p>
+          )}
+        </div>
+      </section>
 
-        <Combined
-            show={showModal}
-            handleClose={() => setShowModal(false)}
-            game={selectedGame}
-            fulldata={fullCombined}
-        />
-        <EditGameModal
-            show={showEditModal}
-            handleClose={handleCloseAllModals}
-            game={gameBeingEdited}
-            onSave={handleSaveEditedGame}
-            setRefreshGames={setRefreshGames}
-        />
-      </>
+      <Combined
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        game={selectedGame}
+        fulldata={fullCombined}
+      />
+      <EditGameModal
+        show={showEditModal}
+        handleClose={handleCloseAllModals}
+        game={gameBeingEdited}
+        onSave={handleSaveEditedGame}
+        setRefreshGames={setRefreshGames}
+      />
+    </>
   );
 };
 
