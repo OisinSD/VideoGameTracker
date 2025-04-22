@@ -1,8 +1,6 @@
 import React, { forwardRef } from "react";
-// import { Link } from "react-router-dom";
+import { Nav, Button } from "react-bootstrap";
 import "../assets/styles/Sidebar.css";
-
-
 
 import {
   House,
@@ -15,50 +13,61 @@ import {
 
 const Sidebar = forwardRef(({ onLogout, onSelectSection }, ref) => {
   return (
-      <div className="sidebar" ref={ref}>
+    <Nav className="sidebar flex-column" ref={ref}>
+      <Button
+        variant="link"
+        className="sidebar-link text-start"
+        onClick={() => onSelectSection("home")}
+      >
+        <House className="icon" />
+        <span>Home</span>
+      </Button>
 
-          <button className="sidebar-link" onClick={() => onSelectSection("home")}>
-              <House className="icon"/>
-              <span>Home</span>
-          </button>
+      <Button
+        variant="link"
+        className="sidebar-link text-start"
+        onClick={() => onSelectSection("playing")}
+      >
+        <HourglassSplit className="icon" />
+        <span>Currently Playing</span>
+      </Button>
 
-          <button
-              className="sidebar-link"
-              onClick={() => onSelectSection("playing")}
-          >
-              <HourglassSplit className="icon"/>
-              <span>Currently Playing</span>
-          </button>
+      <Button
+        variant="link"
+        className="sidebar-link text-start"
+        onClick={() => onSelectSection("library")}
+      >
+        <CollectionPlay className="icon" />
+        <span>Finished Games</span>
+      </Button>
 
-          <button
-              className="sidebar-link"
-              onClick={() => onSelectSection("library")}
-          >
-              <CollectionPlay className="icon"/>
-              <span>Finished Games</span>
-          </button>
+      <Button
+        variant="link"
+        className="sidebar-link text-start"
+        onClick={() => onSelectSection("allGames")}
+      >
+        <Joystick className="icon" />
+        <span>All Games</span>
+      </Button>
 
-          <button
-              className="sidebar-link"
-              onClick={() => onSelectSection("allGames")}
-          >
-              <Joystick className="icon"/>
-              <span>All Games</span>
-          </button>
+      <Button
+        variant="link"
+        className="sidebar-link text-start"
+        onClick={() => onSelectSection("profile")}
+      >
+        <PersonCircle className="icon" />
+        <span>Profile</span>
+      </Button>
 
-          <button
-              className="sidebar-link"
-              onClick={() => onSelectSection("profile")}
-          >
-              <PersonCircle className="icon"/>
-              <span>Profile</span>
-          </button>
-
-          <button className="sidebar-link" onClick={onLogout}>
-              <BoxArrowRight className="icon"/>
-              <span>Logout</span>
-          </button>
-      </div>
+      <Button
+        variant="link"
+        className="sidebar-link text-start"
+        onClick={onLogout}
+      >
+        <BoxArrowRight className="icon" />
+        <span>Logout</span>
+      </Button>
+    </Nav>
   );
 });
 

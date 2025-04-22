@@ -73,6 +73,7 @@ export default function GameInfo({
       hoursPlayed: 0,
       currentlyPlaying: true,
       addedAt: new Date(),
+      gameID: game?.id || null,
     };
 
     try {
@@ -89,6 +90,14 @@ export default function GameInfo({
         );
 
         if (alreadyExists) {
+          const index = existingGames.findIndex(
+            (g) => g.title === gameData.title
+          );
+          if (index !== -1 && !existingGames[index].gameID) {
+            existingGames[index] = { ...existingGames[index], gameID: game.id };
+            await setDoc(userGameRef, { games: existingGames });
+            console.log("****Updated missing gameID for****", gameData.title);
+          }
           return;
         }
       }
@@ -251,12 +260,15 @@ export default function GameInfo({
                   "linear-gradient(90deg, #7f57f5, #e157f5)";
               }}
               onClick={() => {
-                triggerAddGame({
-                  review,
-                  rating,
-                  hoursPlayed,
-                  trophiesUnlocked: game.parent_achievements_count || 0,
-                });
+                triggerAddGame(
+                  {
+                    review,
+                    rating,
+                    hoursPlayed,
+                    trophiesUnlocked: game.parent_achievements_count || 0,
+                  },
+                  game
+                );
               }}
             >
               Add to Finished
