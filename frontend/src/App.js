@@ -20,11 +20,14 @@ import PrivacyModal from "./components/PrivacyModal";
 import TermsModal from "./components/TermsModal";
 import AboutModal from "./components/AboutModal";
 import ContactModal from "./components/ContactModal";
+import GameLoadingScreen from "./components/GameLoadingScreen";
 
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSplashActive, setIsSplashActive] = useState(false);
+
 
   const [modalState, setModalState] = useState({
     privacy: false,
@@ -50,70 +53,64 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setLoggedIn(!!user);
+      if (user) {
+        setIsSplashActive(true);   // 👈 Show splash first
+        setLoggedIn(true);
+        setTimeout(() => {
+          setIsSplashActive(false); // 👈 Then show homepage
+        }, 2500); // 2.5 seconds
+      } else {
+        setLoggedIn(false);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
-  if (loading) {
-    return <h2>Loading...</h2>;
-  }
+
 
   return (
-    <Router>
-      <div className={`App ${themeClass}`}>
+      <Router>
+        <div className={`App ${themeClass}`}>
 
-        <button
-            onClick={() => setDarkMode(prev => !prev)}
-            className="btn btn-sm btn-secondary position-absolute top-0 end-0 m-3 z-3">
+          <button
+              onClick={() => setDarkMode((prev) => !prev)}
+              className="btn btn-sm btn-secondary position-absolute top-0 end-0 m-3 z-3"
+          >
+            {darkMode ? "Light Mode" : "Dark Mode"}
+          </button>
 
-          {darkMode ? "Light Mode" : "Dark Mode"}
-        </button>
+          <Routes>
+            {isSplashActive ? (
+                <Route path="*" element={<GameLoadingScreen />} />
+            ) : loggedIn ? (
+                <>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="*" element={<Navigate to="/" />} />
+                </>
+            ) : (
+                <>
+                  <Route path="/signup" element={<SignUpForm />} />
+                  <Route path="/signin" element={<SignInForm />} />
+                  <Route path="*" element={<Navigate to="/signin" />} />
+                </>
+            )}
+          </Routes>
 
-        {loggedIn ? (
-            <>
-              <Routes>
-                <Route path="/" element={<HomePage/>}/>
-                <Route path="/profile" element={<ProfilePage/>}/>
-                <Route path="*" element={<Navigate to="/"/>}/>
-
-              </Routes>
-            </>
-        ) : (
-            <>
-              <Routes>
-                <Route path="/signup" element={<SignUpForm/>}/>
-                <Route path="/signin" element={<SignInForm/>}/>
-                <Route path="*" element={<Navigate to="/signin"/>}/>
 
 
-              </Routes>
-
-            </>
-        )}
-        <Footer onPrivacyClick={() => openModal("privacy")}
-                onTermsClick={() => openModal("terms")}
-                onAboutClick={() => openModal("about")}
-                onContactClick={() => openModal("contact")}
-        />
-        <PrivacyModal
-            show={modalState.privacy}
-            handleClose={() => closeModal("privacy")}
-        />
-        <TermsModal
-            show={modalState.terms}
-            handleClose={() => closeModal("terms")}
-        />
-        <AboutModal
-            show={modalState.about}
-            handleClose={() => closeModal("about")}
-        />
-        <ContactModal
-            show={modalState.contact}
-            handleClose={() => closeModal("contact")}
-        />
-      </div>
-    </Router>
+          <Footer
+              onPrivacyClick={() => openModal("privacy")}
+              onTermsClick={() => openModal("terms")}
+              onAboutClick={() => openModal("about")}
+              onContactClick={() => openModal("contact")}
+          />
+          <PrivacyModal show={modalState.privacy} handleClose={() => closeModal("privacy")} />
+          <TermsModal show={modalState.terms} handleClose={() => closeModal("terms")} />
+          <AboutModal show={modalState.about} handleClose={() => closeModal("about")} />
+          <ContactModal show={modalState.contact} handleClose={() => closeModal("contact")} />
+        </div>
+      </Router>
   );
 }
 

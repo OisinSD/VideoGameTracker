@@ -22,7 +22,7 @@ const SignInForm = ({ onLogin }) => {
       setErrors({});
       await signInWithEmailAndPassword(auth, email, password);
       onLogin(true);
-      navigate("/");
+      navigate("/loading");
     } catch (err) {
       setErrors({ general: err.message });
     }
