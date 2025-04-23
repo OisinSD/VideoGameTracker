@@ -17,13 +17,15 @@ const GameLoadingScreen = () => {
         let current = 0;
         const interval = setInterval(() => {
             current += 100 / steps;
-            setProgress(current);
+            const safeProgress = Math.min(current, 100); // prevent going over
+            setProgress(safeProgress);
 
-            if (current >= 100) {
+            if (safeProgress >= 100) {
                 clearInterval(interval);
                 navigate("/");
             }
         }, intervalTime);
+
 
         return () => clearInterval(interval);
     }, [navigate]);

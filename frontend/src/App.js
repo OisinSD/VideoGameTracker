@@ -79,23 +79,28 @@ function App() {
             {darkMode ? "Light Mode" : "Dark Mode"}
           </button>
 
-          <Routes>
-            {isSplashActive ? (
-                <Route path="*" element={<GameLoadingScreen />} />
-            ) : loggedIn ? (
-                <>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="*" element={<Navigate to="/" />} />
-                </>
-            ) : (
-                <>
-                  <Route path="/signup" element={<SignUpForm />} />
-                  <Route path="/signin" element={<SignInForm />} />
-                  <Route path="*" element={<Navigate to="/signin" />} />
-                </>
-            )}
-          </Routes>
+          {loading ? (
+              <h2>Loading...</h2>
+          ) : (
+              <Routes>
+                {isSplashActive ? (
+                    <Route path="*" element={<GameLoadingScreen />} />
+                ) : loggedIn ? (
+                    <>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="*" element={<Navigate to="/" />} />
+                    </>
+                ) : (
+                    <>
+                      <Route path="/signup" element={<SignUpForm />} />
+                      <Route path="/signin" element={<SignInForm />} />
+                      <Route path="*" element={<Navigate to="/signin" />} />
+                    </>
+                )}
+              </Routes>
+          )}
+
 
 
 
