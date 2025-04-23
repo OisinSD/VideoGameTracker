@@ -38,7 +38,7 @@ const ProfilePage = ({ show, handleClose, refreshTrigger }) => {
         <div
             className="text-light d-flex justify-content-center"
             style={{
-                backgroundColor: "#121212",
+                //backgroundColor: "#121212",
                 minHeight: "100vh",
                 padding: "2rem",
                 marginTop: "2rem",
