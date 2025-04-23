@@ -20,7 +20,7 @@ export default function AddGame({
   const [trophiesUnlocked, setTrophiesUnlocked] = useState("");
 
   const [buttonAnimated, setButtonAnimated] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
+  // const [isPlaying, setIsPlaying] = useState(true);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -41,8 +41,8 @@ export default function AddGame({
       trophiesUnlocked: parseInt(trophiesUnlocked),
       hoursPlayed: parseInt(hoursPlayed),
       addedAt: new Date(),
-      // currentlyPlaying: false,
-      currentlyPlaying: isPlaying,
+      currentlyPlaying: false,
+      // currentlyPlaying: isPlaying,
       gameID: game?.id || null,
     };
 
