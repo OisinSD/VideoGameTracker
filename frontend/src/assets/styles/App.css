@@ -58,3 +58,29 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.dark-mode .home-page {
+  background-color: black;
+  color: white;
+}
+
+.light-mode .home-page {
+  background-color: white;
+  color: black;
+}
+
+.light-mode input {
+  background: white;
+  color: black;
+}
+
+.light-mode .game-card {
+  background-color: #f0f0f0;
+  color: black;
+}
+
+.dark-mode .game-card {
+  background-color: rgb(70, 69, 69);
+  color: white;
+}
+

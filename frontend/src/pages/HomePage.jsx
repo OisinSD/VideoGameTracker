@@ -62,59 +62,65 @@ const HomePage = () => {
           <div className="banner">
             <div className="position-absolute top-0 start-0 m-3">
               <Button
-                variant="light"
-                onClick={() => setSidebarVisible((v) => !v)}
-                style={{
-                  opacity: 0.7,
-                  backgroundColor: "white",
-                  border: "none",
-                }}
+                  variant="light"
+                  onClick={() => setSidebarVisible((v) => !v)}
+                  style={{
+                    opacity: 0.7,
+                    backgroundColor: "white",
+                    border: "none",
+                  }}
               >
-                <List size={30} />
+                <List size={30}/>
               </Button>
             </div>
-            <PixelRunner />
+
+            {/* 👉 Mario locked to bottom of banner */}
+            <div className="position-absolute bottom-0 start-0 w-100" style={{height: "40px", pointerEvents: "none"}}>
+              <PixelRunner/>
+            </div>
+
             <div className="search-bar-container">
               <NewSearchBar
-                setResults={setResults}
-                results={results}
-                triggerGameInfo={triggerGameInfo}
+                  setResults={setResults}
+                  results={results}
+                  triggerGameInfo={triggerGameInfo}
               />
-              <SearchResults results={results} onSelectGame={triggerGameInfo} />
+              <SearchResults results={results} onSelectGame={triggerGameInfo}/>
             </div>
           </div>
         </div>
+
       </header>
 
       {sidebarVisible && (
-        <Sidebar
-          ref={sidebarRef}
-          onLogout={handleLogout}
-          onSelectSection={setActiveSection}
-        />
+          <Sidebar
+              ref={sidebarRef}
+              onLogout={handleLogout}
+              onSelectSection={setActiveSection}
+          />
       )}
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={activeSection}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            marginLeft: sidebarVisible ? "220px" : "0px",
-            transition: "margin-left 0.3s ease",
-            padding: "20px",
-          }}
+            key={activeSection}
+            initial={{opacity: 0}}
+            animate={{opacity: 1}}
+            exit={{opacity: 0}}
+            transition={{duration: 0.3}}
+            style={{
+              marginLeft: sidebarVisible ? "220px" : "0px",
+              transition: "margin-left 0.3s ease",
+              padding: "20px",
+            }}
         >
           {activeSection === "home" && (
-            <>
-              <GameRecommendationsCarousel />
-              <GameCardDisplay
-                refreshTrigger={refreshGames}
-                viewSection="playing"
-                showToast={showToast}
-                limit={8}
+              <>
+                <GameRecommendationsCarousel/>
+                <GameCardDisplay
+                    refreshTrigger={refreshGames}
+                    viewSection="playing"
+                    showToast={showToast}
+                    limit={8}
               />
               <GameCardDisplay
                 refreshTrigger={refreshGames}

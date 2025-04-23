@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from "react";
 import "../assets/PixelRunner.css";
 import marioSprite from "../assets/images/8bit-mario-runing.webp";
 
-
-
 const PixelRunner = () => {
     const spriteRef = useRef(null);
 
@@ -24,14 +22,14 @@ const PixelRunner = () => {
     }, []);
 
     return (
-        <div className="runner-container">
+        <div className="position-absolute bottom-0 start-0 w-100" style={{ height: "40px", pointerEvents: "none" }}>
             <img
                 ref={spriteRef}
                 src={marioSprite}
                 alt="Runner"
-                className="runner"
+                className="runner position-absolute"
+                style={{ height: "40px" }}
             />
-
         </div>
     );
 };
