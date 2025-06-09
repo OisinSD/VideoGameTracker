@@ -1,6 +1,8 @@
 # Quest Log
 
-
+Quest Log is a Video Game tracker group project. 
+Made with React, Firebase and Firestore. 
+Save and track progress of Video games from over 500,000 to choose from (RAWG API).
 
 ## Getting started
 
