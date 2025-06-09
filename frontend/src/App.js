@@ -52,7 +52,7 @@ function App() {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {  
       if (user) {
         setIsSplashActive(true);   // 👈 Show splash first
         setLoggedIn(true);

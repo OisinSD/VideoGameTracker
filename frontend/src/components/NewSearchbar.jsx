@@ -73,21 +73,12 @@ import "../assets/styles/NewSearch.css"
 export const NewSearchBar = ({ setResults, results, triggerGameInfo }) => {
   const [input, setInput] = useState("");
 
-  const handleChange = async (value) => {
-    setInput(value);
-    if (value.trim() !== "") {
-      const results = await fetchGames(value);
-      setResults(results);
-    } else {
-      setResults([]);
-    }
-  };
-
+  
   const clearInput = () => {
     setInput("");
     setResults([]);
   };
-
+  
   const fetchGame = async (gameId) => {
     const API_KEY = "e784bf5f8e30437686ea67247443042d";
     const url = `https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`;
@@ -100,7 +91,17 @@ export const NewSearchBar = ({ setResults, results, triggerGameInfo }) => {
       console.error("Error fetching game:", error);
     }
   };
-
+  
+  const handleChange = async (value) => {
+    setInput(value);
+    if (value.trim() !== "") {
+      const results = await fetchGames(value);
+      setResults(results);
+    } else {
+      setResults([]);
+    }
+  };
+  
   const handleKeyDown = async (e) => {
     if (e.key === "Enter" && input.trim() !== "" && results.length > 0) {
       fetchGame(results[0].id);
